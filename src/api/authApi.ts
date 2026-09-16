@@ -12,6 +12,11 @@ export const authApi = {
     return response.data;
   },
 
+  async emailDisponible(email: string, signal?: AbortSignal): Promise<boolean> {
+    const response = await apiClient.post<{ disponible: boolean }>('/auth/email-disponible', { email }, { signal });
+    return response.data.disponible;
+  },
+
   async forgotPassword(data: ForgotPasswordRequest): Promise<void> {
     await apiClient.post('/auth/forgot-password', data);
   },

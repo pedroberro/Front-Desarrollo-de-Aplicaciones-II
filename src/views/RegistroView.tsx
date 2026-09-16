@@ -2,6 +2,7 @@ import { useState, type FormEvent, type ReactNode } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { getApiErrorMessage, getApiFieldErrors, getApiStatus } from '../api/apiError';
 import { useAuth } from '../hooks/useAuth';
+import { useEmailDisponible } from '../hooks/useEmailDisponible';
 import { AuthHeader } from '../components/auth/AuthHeader';
 import { PasswordInput } from '../components/auth/PasswordInput';
 import { PasswordStrength } from '../components/auth/PasswordStrength';
@@ -36,6 +37,8 @@ export function RegistroView() {
   const [errorGeneral, setErrorGeneral] = useState<string | null>(null);
   const [enviando, setEnviando] = useState(false);
 
+  const { estado: estadoEmail, verificar: verificarEmail } = useEmailDisponible(email);
+
   const evaluacion = evaluarPassword(password);
   const errores: Record<Campo, string | null> = {
     nombre: validarNombre(nombre),
@@ -43,7 +46,7 @@ export function RegistroView() {
     telefono: validarTelefono(telefono),
     password: evaluacion.error,
   };
-  const valido = Object.values(errores).every((e) => e === null);
+  const valido = Object.values(errores).every((e) => e === null) && estadoEmail !== 'ocupado';
 
   const tocar = (campo: Campo) => () => setTocados((t) => ({ ...t, [campo]: true }));
   const cambiar = (campo: Campo, setter: (v: string) => void) => (valor: string) => {
@@ -53,6 +56,13 @@ export function RegistroView() {
   // The password reports as you type once there is something to judge; the rest wait for blur.
   const mostrar = (campo: Campo): ReactNode =>
     erroresServidor[campo] ?? ((tocados[campo] || (campo === 'password' && password)) ? errores[campo] : null);
+
+  const emailOcupado = (
+    <>
+      Ya existe una cuenta con este email.{' '}
+      <Link to="/login" className="text-rose-600 underline">Ingresar</Link>
+    </>
+  );
 
   const handleSubmit = async (event: FormEvent) => {
     event.preventDefault();
@@ -86,14 +96,7 @@ export function RegistroView() {
 
   const manejarErrorRegistro = (err: unknown) => {
     if (getApiStatus(err) === 409) {
-      setErroresServidor({
-        email: (
-          <>
-            Ya existe una cuenta con este email.{' '}
-            <Link to="/login" className="text-rose-600 underline">Ingresar</Link>
-          </>
-        ),
-      });
+      setErroresServidor({ email: emailOcupado });
       return;
     }
     const porCampo = getApiFieldErrors(err);
@@ -150,9 +153,13 @@ export function RegistroView() {
               maxLength={255}
               value={email}
               onChange={(e) => cambiar('email', setEmail)(e.target.value)}
-              onBlur={tocar('email')}
-              error={mostrar('email')}
-              hint="Con este email vas a iniciar sesión."
+              onBlur={() => {
+                tocar('email')();
+                // Only a well-formed email without a known answer is worth a request.
+                if (!errores.email && (estadoEmail === 'sin-verificar' || estadoEmail === 'error')) verificarEmail(email);
+              }}
+              error={mostrar('email') ?? (estadoEmail === 'ocupado' ? emailOcupado : null)}
+              hint={estadoEmail === 'verificando' ? 'Verificando…' : 'Con este email vas a iniciar sesión.'}
             />
 
             <PhoneField
