@@ -31,6 +31,11 @@ export const usuariosApi = {
     return response.data;
   },
 
+  async marcarMedioPagoPrincipal(id: number): Promise<MedioPagoResumen[]> {
+    const response = await apiClient.patch<MedioPagoResumen[]>(`/usuarios/me/medios-pago/${id}/principal`);
+    return response.data;
+  },
+
   async eliminarMedioPago(id: number): Promise<void> {
     await apiClient.delete(`/usuarios/me/medios-pago/${id}`);
   },

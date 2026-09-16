@@ -23,7 +23,8 @@ export function MediosPagoCard({ mediosPago, onCambio, onMensaje }: MediosPagoCa
   const [erroresServidor, setErroresServidor] = useState<Record<string, string>>({});
   const [errorModal, setErrorModal] = useState<string | null>(null);
   const [errorLista, setErrorLista] = useState<string | null>(null);
-  const [eliminando, setEliminando] = useState<number | null>(null);
+  // Card id with a pending delete or primary change; blocks other row actions meanwhile.
+  const [procesando, setProcesando] = useState<number | null>(null);
 
   const lleno = mediosPago.length >= MAX_MEDIOS_PAGO;
 
@@ -63,9 +64,22 @@ export function MediosPagoCard({ mediosPago, onCambio, onMensaje }: MediosPagoCa
     }
   };
 
+  const marcarPrincipal = async (tarjeta: MedioPagoResumen) => {
+    setErrorLista(null);
+    setProcesando(tarjeta.id);
+    try {
+      onCambio(await usuariosApi.marcarMedioPagoPrincipal(tarjeta.id));
+      onMensaje(`La tarjeta terminada en ${tarjeta.ultimos4} es ahora la principal.`);
+    } catch (err) {
+      setErrorLista(getApiErrorMessage(err, 'No pudimos cambiar la tarjeta principal.'));
+    } finally {
+      setProcesando(null);
+    }
+  };
+
   const eliminar = async (tarjeta: MedioPagoResumen) => {
     setErrorLista(null);
-    setEliminando(tarjeta.id);
+    setProcesando(tarjeta.id);
     try {
       await usuariosApi.eliminarMedioPago(tarjeta.id);
       // Reload: removing the primary card promotes another one on the server.
@@ -74,7 +88,7 @@ export function MediosPagoCard({ mediosPago, onCambio, onMensaje }: MediosPagoCa
     } catch (err) {
       setErrorLista(getApiErrorMessage(err, 'No pudimos eliminar el método de pago.'));
     } finally {
-      setEliminando(null);
+      setProcesando(null);
     }
   };
 
@@ -119,6 +133,17 @@ export function MediosPagoCard({ mediosPago, onCambio, onMensaje }: MediosPagoCa
               principal={tarjeta.principal}
               acciones={
                 <>
+                  {!tarjeta.principal && (
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => marcarPrincipal(tarjeta)}
+                      disabled={procesando !== null}
+                      aria-label={`Hacer principal la tarjeta terminada en ${tarjeta.ultimos4}`}
+                    >
+                      Hacer principal
+                    </Button>
+                  )}
                   <Button variant="secondary" size="sm" onClick={() => abrir({ modo: 'editar', tarjeta })}>
                     <Icon name="pencil" size={14} />
                     Editar
@@ -128,7 +153,7 @@ export function MediosPagoCard({ mediosPago, onCambio, onMensaje }: MediosPagoCa
                     size="sm"
                     className="btn-icon"
                     onClick={() => eliminar(tarjeta)}
-                    disabled={eliminando !== null}
+                    disabled={procesando !== null}
                     aria-label={`Eliminar tarjeta terminada en ${tarjeta.ultimos4}`}
                   >
                     <Icon name="trash" size={14} />
