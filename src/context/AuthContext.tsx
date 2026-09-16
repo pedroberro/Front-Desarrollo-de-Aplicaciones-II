@@ -1,4 +1,4 @@
-import { createContext, useState, useCallback, useEffect, type ReactNode } from 'react';
+import { createContext, useState, useCallback, type ReactNode } from 'react';
 import type { Usuario, LoginRequest, RegistroRequest } from '../types';
 import { authApi } from '../api/authApi';
 
@@ -9,34 +9,41 @@ export interface AuthContextType {
   login: (data: LoginRequest) => Promise<void>;
   register: (data: RegistroRequest) => Promise<void>;
   logout: () => Promise<void>;
+  /** Keeps the session copy in sync after the profile changes. */
+  setUsuario: (usuario: Usuario) => void;
 }
 
 export const AuthContext = createContext<AuthContextType | null>(null);
 
-export function AuthProvider({ children }: { children: ReactNode }) {
-  const [usuario, setUsuario] = useState<Usuario | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
+function leerUsuarioGuardado(): Usuario | null {
+  const token = localStorage.getItem('token');
+  const guardado = localStorage.getItem('usuario');
+  if (!token || !guardado) return null;
+  try {
+    const usuario = JSON.parse(guardado) as Usuario;
+    // Sessions saved by the previous contract (fullName, role…) are discarded.
+    if (typeof usuario.nombre === 'string') return usuario;
+  } catch {
+    // Corrupt entry: fall through and clear it.
+  }
+  localStorage.removeItem('token');
+  localStorage.removeItem('usuario');
+  return null;
+}
 
-  useEffect(() => {
-    const token = localStorage.getItem('token');
-    const savedUser = localStorage.getItem('usuario');
-    if (token && savedUser) {
-      try {
-        setUsuario(JSON.parse(savedUser));
-      } catch {
-        localStorage.removeItem('token');
-        localStorage.removeItem('usuario');
-      }
-    }
-    setIsLoading(false);
+export function AuthProvider({ children }: { children: ReactNode }) {
+  const [usuario, setUsuarioState] = useState<Usuario | null>(leerUsuarioGuardado);
+
+  const setUsuario = useCallback((actualizado: Usuario) => {
+    localStorage.setItem('usuario', JSON.stringify(actualizado));
+    setUsuarioState(actualizado);
   }, []);
 
   const login = useCallback(async (data: LoginRequest) => {
     const response = await authApi.login(data);
     localStorage.setItem('token', response.token);
-    localStorage.setItem('usuario', JSON.stringify(response.usuario));
     setUsuario(response.usuario);
-  }, []);
+  }, [setUsuario]);
 
   const register = useCallback(async (data: RegistroRequest) => {
     await authApi.register(data);
@@ -48,7 +55,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     } finally {
       localStorage.removeItem('token');
       localStorage.removeItem('usuario');
-      setUsuario(null);
+      setUsuarioState(null);
     }
   }, []);
 
@@ -57,10 +64,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       value={{
         usuario,
         isAuthenticated: !!usuario,
-        isLoading,
+        isLoading: false,
         login,
         register,
         logout,
+        setUsuario,
       }}
     >
       {children}

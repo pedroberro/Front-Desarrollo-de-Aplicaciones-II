@@ -1,58 +1,73 @@
+import { useEffect, useRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../hooks/useAuth';
+import { Icon } from '../ui/Icon';
+import { HOME_PATH } from '../../routes';
+
+// Sections from the wireframes that do not exist yet: shown, but not navigable.
+const SECCIONES_PENDIENTES = ['Empresas', 'Mis reservas'];
 
 export function Navbar() {
-  const { usuario, isAuthenticated, logout } = useAuth();
+  const { usuario, logout } = useAuth();
   const navigate = useNavigate();
+  const [menuAbierto, setMenuAbierto] = useState(false);
+  const menuRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!menuAbierto) return;
+    const cerrar = (event: MouseEvent) => {
+      if (!menuRef.current?.contains(event.target as Node)) setMenuAbierto(false);
+    };
+    document.addEventListener('mousedown', cerrar);
+    return () => document.removeEventListener('mousedown', cerrar);
+  }, [menuAbierto]);
 
   const handleLogout = async () => {
+    setMenuAbierto(false);
     await logout();
-    navigate('/login');
+    navigate('/login', { replace: true });
   };
 
   return (
-    <nav className="bg-white shadow-sm border-b border-gray-200">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between h-16 items-center">
-          <Link to="/" className="text-xl font-bold text-blue-600">
-            ReservaEspacios
-          </Link>
+    <header className="topbar">
+      <Link to={HOME_PATH} className="brand">
+        <Icon name="layers" size={20} className="text-indigo-600" />
+        Planta Libre
+      </Link>
 
-          <div className="flex items-center gap-4">
-            {isAuthenticated ? (
-              <>
-                <Link to="/espacios" className="text-gray-600 hover:text-gray-900">
-                  Espacios
-                </Link>
-                <Link to="/perfil" className="text-gray-600 hover:text-gray-900">
-                  Mi perfil
-                </Link>
-                <span className="text-sm text-gray-500">
-                  {usuario?.fullName}
-                </span>
-                <button
-                  onClick={handleLogout}
-                  className="text-sm text-red-600 hover:text-red-800 cursor-pointer"
-                >
-                  Cerrar sesión
-                </button>
-              </>
-            ) : (
-              <>
-                <Link to="/login" className="text-gray-600 hover:text-gray-900">
-                  Iniciar sesión
-                </Link>
-                <Link
-                  to="/registro"
-                  className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700"
-                >
-                  Registrarse
-                </Link>
-              </>
-            )}
+      <nav className="flex grow items-center gap-6" aria-label="Secciones">
+        {SECCIONES_PENDIENTES.map((seccion) => (
+          <span key={seccion} className="navlink navlink-off" title="Disponible próximamente" aria-disabled="true">
+            {seccion}
+          </span>
+        ))}
+      </nav>
+
+      <div className="relative" ref={menuRef}>
+        <button
+          type="button"
+          className="t-sm flex items-center gap-2 rounded-md px-2 py-1 hover:bg-slate-100"
+          onClick={() => setMenuAbierto((v) => !v)}
+          aria-haspopup="menu"
+          aria-expanded={menuAbierto}
+        >
+          <Icon name="user" className="text-slate-500" />
+          {usuario?.nombre}
+          <Icon name="chevDown" size={14} className="text-slate-400" />
+        </button>
+        {menuAbierto && (
+          <div className="menu" role="menu">
+            <Link to="/perfil" className="menu-item" role="menuitem" onClick={() => setMenuAbierto(false)}>
+              <Icon name="user" className="text-slate-500" />
+              Mi perfil
+            </Link>
+            <button type="button" className="menu-item" role="menuitem" onClick={handleLogout}>
+              <Icon name="logout" className="text-slate-500" />
+              Cerrar sesión
+            </button>
           </div>
-        </div>
+        )}
       </div>
-    </nav>
+    </header>
   );
 }

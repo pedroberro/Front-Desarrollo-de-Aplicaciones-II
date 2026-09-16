@@ -1,10 +1,13 @@
+export type Rol = 'CLIENTE' | 'PROVEEDOR' | 'ADMIN';
+
 export interface Usuario {
-  id: string;
-  fullName: string;
+  id: number;
+  publicId: string;
+  nombre: string;
   email: string;
   telefono: string;
-  role: 'cliente' | 'proveedor' | 'admin';
-  status: string;
+  rol: Rol;
+  estado: string;
   createdAt: string;
 }
 
@@ -40,6 +43,11 @@ export interface PageResponse<T> {
   size: number;
 }
 
+export interface ApiErrorBody {
+  message: string;
+  errors?: Record<string, string>;
+}
+
 export interface AuthResponse {
   token: string;
   usuario: Usuario;
@@ -65,7 +73,7 @@ export interface ForgotPasswordRequest {
 
 export interface ResetPasswordRequest {
   token: string;
-  password: string;
+  nuevaPassword: string;
 }
 
 export interface UpdateMeRequest {
@@ -84,10 +92,19 @@ export interface MedioPagoRequest {
   codigoSeguridad: string;
 }
 
+export interface MedioPagoUpdateRequest {
+  titular: string;
+  vencimiento: string;
+}
+
 export interface MedioPagoResumen {
   id: number;
   tipo: string;
   descripcion: string;
+  ultimos4: string;
+  titular: string;
+  vencimiento: string;
+  principal: boolean;
   verificado: boolean;
   estado: string;
 }

@@ -6,17 +6,13 @@ interface CardProps {
 }
 
 export function Card({ children, className = '' }: CardProps) {
-  return (
-    <div className={`bg-white rounded-xl shadow-md border border-gray-100 overflow-hidden ${className}`}>
-      {children}
-    </div>
-  );
+  return <div className={`card ${className}`}>{children}</div>;
 }
 
 export function CardHeader({ children, className = '' }: CardProps) {
-  return <div className={`px-6 py-4 border-b border-gray-100 ${className}`}>{children}</div>;
+  return <div className={`card-hd ${className}`}>{children}</div>;
 }
 
 export function CardBody({ children, className = '' }: CardProps) {
-  return <div className={`px-6 py-4 ${className}`}>{children}</div>;
+  return <div className={`card-bd ${className}`}>{children}</div>;
 }

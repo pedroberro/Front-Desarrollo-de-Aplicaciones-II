@@ -1,7 +1,139 @@
 @import "tailwindcss";
 
+/* Planta Libre design system, ported from the wireframes.
+   Tokens follow the Tailwind scale: slate for neutrals, a single indigo-600 accent,
+   and emerald / rose / amber reserved for states. Components below are the only
+   place these values are spelled out; screens compose the classes. */
+
+@theme {
+  --font-sans: "IBM Plex Sans", "Segoe UI", Helvetica, Arial, sans-serif;
+  --font-mono: "IBM Plex Mono", "SF Mono", Menlo, monospace;
+}
+
+:root {
+  --accent: var(--color-indigo-600);
+  --accent-700: var(--color-indigo-700);
+  --accent-50: var(--color-indigo-50);
+  --accent-200: var(--color-indigo-200);
+  --ok: var(--color-emerald-600);
+  --busy: var(--color-rose-600);
+  --busy-50: var(--color-rose-50);
+  --busy-200: var(--color-rose-200);
+}
+
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background: var(--color-slate-50);
+  color: var(--color-slate-900);
+  font-family: var(--font-sans);
+  font-size: 14px;
+  line-height: 1.45;
   -webkit-font-smoothing: antialiased;
+}
+
+@layer components {
+  /* Type scale */
+  .t-xs { font-size: 12px; line-height: 16px; }
+  .t-sm { font-size: 13px; line-height: 20px; }
+  .t-base { font-size: 14px; line-height: 20px; }
+  .t-lg { font-size: 16px; line-height: 24px; }
+  .t-xl { font-size: 18px; line-height: 26px; }
+  .t-2xl { font-size: 22px; line-height: 30px; letter-spacing: -0.02em; }
+  .t-3xl { font-size: 28px; line-height: 36px; letter-spacing: -0.02em; }
+  .muted { color: var(--color-slate-500); }
+  .muted2 { color: var(--color-slate-400); }
+  .num { font-variant-numeric: tabular-nums; }
+  .mono { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+
+  .link { color: var(--accent); font-weight: 500; cursor: pointer; }
+  .link:hover { color: var(--accent-700); text-decoration: underline; }
+
+  /* Button */
+  .btn {
+    display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+    height: 36px; padding: 0 14px; border-radius: 6px; border: 1px solid transparent;
+    font: 500 14px/1 var(--font-sans); cursor: pointer; white-space: nowrap;
+  }
+  .btn-sm { height: 28px; padding: 0 10px; font-size: 13px; }
+  .btn-lg { height: 44px; padding: 0 20px; font-size: 15px; }
+  .btn-icon { padding: 0; width: 28px; }
+  .btn-primary { background: var(--accent); color: #fff; }
+  .btn-primary:hover:not(:disabled) { background: var(--accent-700); }
+  .btn-secondary { background: #fff; color: var(--color-slate-700); border-color: var(--color-slate-300); }
+  .btn-secondary:hover:not(:disabled) { background: var(--color-slate-50); }
+  .btn-danger { background: #fff; color: var(--busy); border-color: var(--busy-200); }
+  .btn-danger:hover:not(:disabled) { background: var(--busy-50); }
+  .btn-ghost { background: transparent; color: var(--color-slate-600); }
+  .btn-ghost:hover:not(:disabled) { background: var(--color-slate-100); }
+  .btn:disabled { opacity: 0.45; cursor: not-allowed; }
+
+  /* Field */
+  .field { display: flex; flex-direction: column; gap: 6px; }
+  .label { font-size: 13px; font-weight: 500; color: var(--color-slate-700); }
+  .input {
+    height: 36px; padding: 0 10px; border: 1px solid var(--color-slate-300); border-radius: 6px;
+    background: #fff; display: flex; align-items: center; gap: 8px; color: var(--color-slate-900);
+  }
+  .input:focus-within { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-50); }
+  .input input, .input select {
+    flex: 1; min-width: 0; height: 100%; border: 0; outline: none; background: transparent;
+    font: 400 14px/1 var(--font-sans); color: inherit; padding: 0;
+  }
+  .input input::placeholder { color: var(--color-slate-400); }
+  .input-error, .input-error:focus-within { border-color: var(--busy); box-shadow: 0 0 0 3px var(--busy-50); }
+  .input-icon { color: var(--color-slate-400); }
+  .input-error .input-icon { color: var(--busy); }
+  .hint { font-size: 12px; line-height: 16px; color: var(--color-slate-500); }
+  .hint-error { font-size: 12px; line-height: 16px; color: var(--busy); display: flex; align-items: center; gap: 5px; }
+
+  /* Card */
+  .card { background: #fff; border: 1px solid var(--color-slate-200); border-radius: 8px; box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04); }
+  .card-hd { padding: 16px; border-bottom: 1px solid var(--color-slate-200); display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+  .card-bd { padding: 16px; }
+
+  /* Badge */
+  .badge {
+    display: inline-flex; align-items: center; gap: 5px; height: 22px; padding: 0 8px;
+    border-radius: 999px; font-size: 12px; font-weight: 500; border: 1px solid; white-space: nowrap;
+  }
+  .badge-sm { height: 19px; font-size: 11px; }
+  .b-neutral { background: var(--color-slate-100); color: var(--color-slate-600); border-color: var(--color-slate-200); }
+  .b-accent { background: var(--accent-50); color: var(--accent-700); border-color: var(--accent-200); }
+  .b-ok { background: var(--color-emerald-50); color: var(--color-emerald-700); border-color: var(--color-emerald-200); }
+
+  /* Alert */
+  .alert { display: flex; align-items: flex-start; gap: 8px; border-radius: 6px; padding: 10px 12px; font-size: 13px; line-height: 20px; border: 1px solid; }
+  .alert-error { background: var(--busy-50); color: var(--color-rose-700); border-color: var(--busy-200); }
+  .alert-ok { background: var(--color-emerald-50); color: var(--color-emerald-700); border-color: var(--color-emerald-200); }
+  .alert-info { background: var(--color-slate-50); color: var(--color-slate-500); border-color: var(--color-slate-200); }
+
+  /* Shell */
+  .topbar { height: 56px; background: #fff; border-bottom: 1px solid var(--color-slate-200); display: flex; align-items: center; gap: 24px; padding: 0 32px; }
+  .brand { display: flex; align-items: center; gap: 8px; font-weight: 600; font-size: 15px; letter-spacing: -0.01em; }
+  .navlink { font-size: 14px; color: var(--color-slate-600); padding: 4px 0; }
+  .navlink-off { color: var(--color-slate-400); cursor: default; }
+  .page { padding: 24px 32px 32px; display: flex; flex-direction: column; gap: 20px; }
+
+  /* Rows used by payment methods */
+  .row-item { display: flex; align-items: center; gap: 12px; padding: 12px 14px; border: 1px solid var(--color-slate-200); border-radius: 8px; background: #fff; }
+  .row-add { border-style: dashed; border-color: var(--color-slate-300); background: var(--color-slate-50); cursor: pointer; text-align: left; width: 100%; font: inherit; color: inherit; }
+  .row-add:hover:not(:disabled) { border-color: var(--accent-200); background: var(--accent-50); }
+  .row-add:disabled { opacity: 0.6; cursor: not-allowed; border-color: var(--color-slate-200); background: #fff; }
+  .card-chip { width: 38px; height: 26px; border-radius: 5px; background: var(--accent-50); border: 1px solid var(--accent-200); color: var(--accent-700); display: flex; align-items: center; justify-content: center; flex: none; }
+
+  /* Empty state */
+  .empty { display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 24px 16px; text-align: center; }
+  .empty-ic { width: 38px; height: 38px; border-radius: 999px; background: var(--color-slate-100); display: flex; align-items: center; justify-content: center; color: var(--color-slate-400); }
+
+  /* Modal */
+  .scrim { position: fixed; inset: 0; background: rgba(15, 23, 42, 0.45); display: flex; align-items: center; justify-content: center; padding: 16px; z-index: 50; }
+  .modal { background: #fff; border-radius: 10px; box-shadow: 0 20px 40px rgba(15, 23, 42, 0.24); width: 440px; max-width: 100%; overflow: hidden; }
+  .modal-hd { padding: 16px 20px; border-bottom: 1px solid var(--color-slate-200); display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+  .modal-bd { display: flex; flex-direction: column; gap: 14px; padding: 18px 20px; }
+  .modal-ft { padding: 14px 20px; background: var(--color-slate-50); border-top: 1px solid var(--color-slate-200); display: flex; gap: 8px; justify-content: flex-end; }
+
+  /* Menu */
+  .menu { position: absolute; right: 0; top: calc(100% + 6px); min-width: 180px; background: #fff; border: 1px solid var(--color-slate-200); border-radius: 8px; box-shadow: 0 12px 28px rgba(15, 23, 42, 0.16); padding: 4px; z-index: 40; }
+  .menu-item { display: flex; align-items: center; gap: 8px; width: 100%; height: 34px; padding: 0 10px; border-radius: 6px; font: 400 14px/1 var(--font-sans); color: var(--color-slate-700); background: transparent; border: 0; cursor: pointer; text-align: left; }
+  .menu-item:hover { background: var(--color-slate-100); }
 }

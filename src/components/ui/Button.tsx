@@ -2,32 +2,32 @@ import type { ButtonHTMLAttributes, ReactNode } from 'react';
 
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   children: ReactNode;
-  variant?: 'primary' | 'secondary' | 'danger';
+  variant?: 'primary' | 'secondary' | 'danger' | 'ghost';
+  size?: 'sm' | 'md' | 'lg';
   isLoading?: boolean;
 }
+
+const sizes = { sm: 'btn-sm', md: '', lg: 'btn-lg' };
 
 export function Button({
   children,
   variant = 'primary',
+  size = 'md',
   isLoading,
   className = '',
   disabled,
+  type = 'button',
   ...props
 }: ButtonProps) {
-  const base = 'px-4 py-2 rounded-lg font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer';
-  const variants = {
-    primary: 'bg-blue-600 text-white hover:bg-blue-700',
-    secondary: 'bg-gray-200 text-gray-800 hover:bg-gray-300',
-    danger: 'bg-red-600 text-white hover:bg-red-700',
-  };
-
   return (
     <button
-      className={`${base} ${variants[variant]} ${className}`}
+      type={type}
+      className={`btn btn-${variant} ${sizes[size]} ${className}`}
       disabled={disabled || isLoading}
+      aria-busy={isLoading || undefined}
       {...props}
     >
-      {isLoading ? 'Cargando...' : children}
+      {isLoading ? 'Procesando…' : children}
     </button>
   );
 }

@@ -5,6 +5,7 @@ import { getApiErrorMessage } from '../api/apiError';
 import { Button } from '../components/ui/Button';
 import { Input } from '../components/ui/Input';
 import { Card, CardBody } from '../components/ui/Card';
+import { emailRules, passwordRules } from '../utils/validation';
 
 type Paso = 'solicitar' | 'restablecer';
 
@@ -50,7 +51,7 @@ export function OlvidePasswordView() {
     setIsLoading(true);
 
     try {
-      await authApi.resetPassword({ token, password: newPassword });
+      await authApi.resetPassword({ token, nuevaPassword: newPassword });
       setMensaje('Contraseña restablecida correctamente. Ya podés iniciar sesión.');
       setNewPassword('');
       setConfirmPassword('');
@@ -99,6 +100,7 @@ export function OlvidePasswordView() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
+                {...emailRules}
                 placeholder="tu@email.com"
               />
 
@@ -124,8 +126,7 @@ export function OlvidePasswordView() {
                 onChange={(e) => setNewPassword(e.target.value)}
                 required
                 placeholder="••••••"
-                minLength={8}
-                pattern="(?=.*[A-Za-z])(?=.*\\d).+"
+                {...passwordRules}
               />
 
               <Input
@@ -135,8 +136,7 @@ export function OlvidePasswordView() {
                 onChange={(e) => setConfirmPassword(e.target.value)}
                 required
                 placeholder="••••••"
-                minLength={8}
-                pattern="(?=.*[A-Za-z])(?=.*\\d).+"
+                {...passwordRules}
               />
 
               <Button type="submit" isLoading={isLoading} className="w-full mt-2">

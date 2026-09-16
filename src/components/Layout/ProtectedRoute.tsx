@@ -1,24 +1,14 @@
+import type { ReactNode } from 'react';
 import { Navigate } from 'react-router-dom';
 import { useAuth } from '../../hooks/useAuth';
 
-interface ProtectedRouteProps {
-  children: React.ReactNode;
+export function ProtectedRoute({ children }: { children: ReactNode }) {
+  const { isAuthenticated } = useAuth();
+  return isAuthenticated ? <>{children}</> : <Navigate to="/login" replace />;
 }
 
-export function ProtectedRoute({ children }: ProtectedRouteProps) {
-  const { isAuthenticated, isLoading } = useAuth();
-
-  if (isLoading) {
-    return (
-      <div className="flex items-center justify-center h-screen">
-        <div className="text-gray-500">Cargando...</div>
-      </div>
-    );
-  }
-
-  if (!isAuthenticated) {
-    return <Navigate to="/login" replace />;
-  }
-
-  return <>{children}</>;
+/** Login and sign-up make no sense with an open session. */
+export function GuestRoute({ children, redirectTo }: { children: ReactNode; redirectTo: string }) {
+  const { isAuthenticated } = useAuth();
+  return isAuthenticated ? <Navigate to={redirectTo} replace /> : <>{children}</>;
 }

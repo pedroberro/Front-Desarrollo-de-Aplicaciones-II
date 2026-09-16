@@ -1,5 +1,5 @@
 import apiClient from './axiosClient';
-import type { ChangePasswordRequest, MedioPagoRequest, MedioPagoResumen, UpdateMeRequest, Usuario } from '../types';
+import type { ChangePasswordRequest, MedioPagoRequest, MedioPagoResumen, MedioPagoUpdateRequest, UpdateMeRequest, Usuario } from '../types';
 
 export const usuariosApi = {
   async obtenerPerfil(): Promise<Usuario> {
@@ -23,6 +23,11 @@ export const usuariosApi = {
 
   async agregarMedioPago(data: MedioPagoRequest): Promise<MedioPagoResumen> {
     const response = await apiClient.post<MedioPagoResumen>('/usuarios/me/medios-pago', data);
+    return response.data;
+  },
+
+  async actualizarMedioPago(id: number, data: MedioPagoUpdateRequest): Promise<MedioPagoResumen> {
+    const response = await apiClient.put<MedioPagoResumen>(`/usuarios/me/medios-pago/${id}`, data);
     return response.data;
   },
 
