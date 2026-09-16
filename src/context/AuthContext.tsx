@@ -8,7 +8,7 @@ export interface AuthContextType {
   isLoading: boolean;
   login: (data: LoginRequest) => Promise<void>;
   register: (data: RegistroRequest) => Promise<void>;
-  logout: () => void;
+  logout: () => Promise<void>;
 }
 
 export const AuthContext = createContext<AuthContextType | null>(null);
@@ -21,7 +21,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const token = localStorage.getItem('token');
     const savedUser = localStorage.getItem('usuario');
     if (token && savedUser) {
-      setUsuario(JSON.parse(savedUser));
+      try {
+        setUsuario(JSON.parse(savedUser));
+      } catch {
+        localStorage.removeItem('token');
+        localStorage.removeItem('usuario');
+      }
     }
     setIsLoading(false);
   }, []);
@@ -37,10 +42,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     await authApi.register(data);
   }, []);
 
-  const logout = useCallback(() => {
-    localStorage.removeItem('token');
-    localStorage.removeItem('usuario');
-    setUsuario(null);
+  const logout = useCallback(async () => {
+    try {
+      await authApi.logout();
+    } finally {
+      localStorage.removeItem('token');
+      localStorage.removeItem('usuario');
+      setUsuario(null);
+    }
   }, []);
 
   return (

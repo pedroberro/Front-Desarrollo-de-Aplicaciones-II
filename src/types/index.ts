@@ -1,8 +1,11 @@
 export interface Usuario {
-  id: number;
-  nombre: string;
+  id: string;
+  fullName: string;
   email: string;
-  rol: 'CLIENTE' | 'PROVEEDOR';
+  telefono: string;
+  role: 'cliente' | 'proveedor' | 'admin';
+  status: string;
+  createdAt: string;
 }
 
 export interface Sede {
@@ -50,8 +53,43 @@ export interface LoginRequest {
 export interface RegistroRequest {
   nombre: string;
   email: string;
+  telefono: string;
   password: string;
   rol: string;
+  medioPago?: MedioPagoRequest;
+}
+
+export interface ForgotPasswordRequest {
+  email: string;
+}
+
+export interface ResetPasswordRequest {
+  token: string;
+  password: string;
+}
+
+export interface UpdateMeRequest {
+  telefono: string;
+}
+
+export interface ChangePasswordRequest {
+  passwordActual: string;
+  passwordNueva: string;
+}
+
+export interface MedioPagoRequest {
+  titular: string;
+  numeroTarjeta: string;
+  vencimiento: string;
+  codigoSeguridad: string;
+}
+
+export interface MedioPagoResumen {
+  id: number;
+  tipo: string;
+  descripcion: string;
+  verificado: boolean;
+  estado: string;
 }
 
 export interface EspaciosFilters {

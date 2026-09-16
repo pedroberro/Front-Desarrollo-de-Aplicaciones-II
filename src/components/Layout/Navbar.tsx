@@ -5,8 +5,8 @@ export function Navbar() {
   const { usuario, isAuthenticated, logout } = useAuth();
   const navigate = useNavigate();
 
-  const handleLogout = () => {
-    logout();
+  const handleLogout = async () => {
+    await logout();
     navigate('/login');
   };
 
@@ -24,8 +24,11 @@ export function Navbar() {
                 <Link to="/espacios" className="text-gray-600 hover:text-gray-900">
                   Espacios
                 </Link>
+                <Link to="/perfil" className="text-gray-600 hover:text-gray-900">
+                  Mi perfil
+                </Link>
                 <span className="text-sm text-gray-500">
-                  {usuario?.nombre} ({usuario?.rol})
+                  {usuario?.fullName}
                 </span>
                 <button
                   onClick={handleLogout}
