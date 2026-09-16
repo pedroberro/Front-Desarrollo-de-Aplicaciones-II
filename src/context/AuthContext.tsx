@@ -1,5 +1,5 @@
 import { createContext, useState, useCallback, type ReactNode } from 'react';
-import type { Usuario, LoginRequest, RegistroRequest } from '../types';
+import type { AuthResponse, Usuario, LoginRequest, RegistroRequest } from '../types';
 import { authApi } from '../api/authApi';
 
 export interface AuthContextType {
@@ -7,6 +7,8 @@ export interface AuthContextType {
   isAuthenticated: boolean;
   isLoading: boolean;
   login: (data: LoginRequest) => Promise<void>;
+  /** Stores a session obtained without the login form (e.g. confirming the email). */
+  iniciarSesion: (respuesta: AuthResponse) => void;
   register: (data: RegistroRequest) => Promise<void>;
   logout: () => Promise<void>;
   /** Keeps the session copy in sync after the profile changes. */
@@ -39,11 +41,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setUsuarioState(actualizado);
   }, []);
 
-  const login = useCallback(async (data: LoginRequest) => {
-    const response = await authApi.login(data);
-    localStorage.setItem('token', response.token);
-    setUsuario(response.usuario);
+  const iniciarSesion = useCallback((respuesta: AuthResponse) => {
+    localStorage.setItem('token', respuesta.token);
+    setUsuario(respuesta.usuario);
   }, [setUsuario]);
+
+  const login = useCallback(async (data: LoginRequest) => {
+    iniciarSesion(await authApi.login(data));
+  }, [iniciarSesion]);
 
   const register = useCallback(async (data: RegistroRequest) => {
     await authApi.register(data);
@@ -66,6 +71,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         isAuthenticated: !!usuario,
         isLoading: false,
         login,
+        iniciarSesion,
         register,
         logout,
         setUsuario,

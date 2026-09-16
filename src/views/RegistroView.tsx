@@ -1,9 +1,11 @@
 import { useState, type FormEvent, type ReactNode } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { getApiErrorMessage, getApiFieldErrors, getApiStatus } from '../api/apiError';
+import { authApi } from '../api/authApi';
 import { useAuth } from '../hooks/useAuth';
 import { useEmailDisponible } from '../hooks/useEmailDisponible';
 import { AuthHeader } from '../components/auth/AuthHeader';
+import { CorreoEnviado } from '../components/auth/CorreoEnviado';
 import { PasswordInput } from '../components/auth/PasswordInput';
 import { PasswordStrength } from '../components/auth/PasswordStrength';
 import { PhoneField } from '../components/auth/PhoneField';
@@ -14,15 +16,13 @@ import { Button } from '../components/ui/Button';
 import { Icon } from '../components/ui/Icon';
 import { Input } from '../components/ui/Input';
 import type { MedioPagoRequest } from '../types';
-import { HOME_PATH } from '../routes';
 import { PREFIJO_DEFAULT, unirTelefono } from '../utils/telefono';
 import { evaluarPassword, validarEmail, validarNombre, validarTelefono } from '../utils/validation';
 
 type Campo = 'nombre' | 'email' | 'telefono' | 'password';
 
 export function RegistroView() {
-  const navigate = useNavigate();
-  const { register, login } = useAuth();
+  const { register } = useAuth();
 
   const [nombre, setNombre] = useState('');
   const [email, setEmail] = useState('');
@@ -36,6 +36,7 @@ export function RegistroView() {
   const [erroresServidor, setErroresServidor] = useState<Partial<Record<Campo, ReactNode>>>({});
   const [errorGeneral, setErrorGeneral] = useState<string | null>(null);
   const [enviando, setEnviando] = useState(false);
+  const [registradoCon, setRegistradoCon] = useState<string | null>(null);
 
   const { estado: estadoEmail, verificar: verificarEmail } = useEmailDisponible(email);
 
@@ -72,25 +73,20 @@ export function RegistroView() {
     }
     setErrorGeneral(null);
     setEnviando(true);
-    const credenciales = { email: email.trim(), password };
     try {
       await register({
         nombre: nombre.trim(),
-        ...credenciales,
+        email: email.trim(),
+        password,
         telefono: unirTelefono(prefijo, telefono),
         rol: 'CLIENTE',
         medioPago: medioPago ?? undefined,
       });
+      setRegistradoCon(email.trim());
     } catch (err) {
       manejarErrorRegistro(err);
+    } finally {
       setEnviando(false);
-      return;
-    }
-    try {
-      await login(credenciales);
-      navigate(HOME_PATH, { replace: true });
-    } catch {
-      navigate('/login', { replace: true });
     }
   };
 
@@ -114,6 +110,22 @@ export function RegistroView() {
     setMedioPago(datos);
     setModalAbierto(false);
   };
+
+  if (registradoCon) {
+    return (
+      <div className="flex min-h-screen items-center justify-center px-4 py-12">
+        <div className="flex w-full max-w-[440px] flex-col items-center gap-8">
+          <AuthHeader title="Confirmá tu email" subtitle="Te falta un paso para empezar a reservar" />
+          <div className="card w-full">
+            <CorreoEnviado onReenviar={() => authApi.reenviarConfirmacion(registradoCon)}>
+              Te enviamos un link a <span className="font-medium text-slate-900">{registradoCon}</span>. Abrilo para
+              confirmar tu email y entrar a tu cuenta.
+            </CorreoEnviado>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="flex min-h-screen justify-center px-4 py-12">

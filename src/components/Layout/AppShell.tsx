@@ -1,7 +1,7 @@
 import { Outlet, useLocation } from 'react-router-dom';
 import { Navbar } from './Navbar';
 
-const AUTH_SCREENS = ['/login', '/registro', '/olvide-password'];
+const AUTH_SCREENS = ['/login', '/registro', '/olvide-password', '/reset-password', '/confirmar-email'];
 
 export function AppShell() {
   const { pathname } = useLocation();

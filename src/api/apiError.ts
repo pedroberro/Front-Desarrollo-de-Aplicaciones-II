@@ -17,6 +17,10 @@ export function getApiFieldErrors(error: unknown): Record<string, string> {
   return getBody(error)?.errors ?? {};
 }
 
+export function getApiCode(error: unknown): string | undefined {
+  return getBody(error)?.code;
+}
+
 export function getApiStatus(error: unknown): number | undefined {
   return axios.isAxiosError(error) ? error.response?.status : undefined;
 }

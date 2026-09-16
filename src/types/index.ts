@@ -46,6 +46,8 @@ export interface PageResponse<T> {
 export interface ApiErrorBody {
   message: string;
   errors?: Record<string, string>;
+  /** Identifies cases the UI handles specially, e.g. EMAIL_NO_CONFIRMADO. */
+  code?: string;
 }
 
 export interface AuthResponse {

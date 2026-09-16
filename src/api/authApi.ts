@@ -12,6 +12,15 @@ export const authApi = {
     return response.data;
   },
 
+  async confirmarEmail(token: string): Promise<AuthResponse> {
+    const response = await apiClient.post<AuthResponse>('/auth/confirmar-email', { token });
+    return response.data;
+  },
+
+  async reenviarConfirmacion(email: string): Promise<void> {
+    await apiClient.post('/auth/reenviar-confirmacion', { email });
+  },
+
   async emailDisponible(email: string, signal?: AbortSignal): Promise<boolean> {
     const response = await apiClient.post<{ disponible: boolean }>('/auth/email-disponible', { email }, { signal });
     return response.data.disponible;
