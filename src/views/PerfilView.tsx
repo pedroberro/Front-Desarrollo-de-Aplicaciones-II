@@ -5,6 +5,7 @@ import { useAuth } from '../hooks/useAuth';
 import { DatosPersonalesCard } from '../components/perfil/DatosPersonalesCard';
 import { MediosPagoCard } from '../components/perfil/MediosPagoCard';
 import { PasswordModal } from '../components/perfil/PasswordModal';
+import { PermisosCard } from '../components/perfil/PermisosCard';
 import { TelefonoModal } from '../components/perfil/TelefonoModal';
 import { Button } from '../components/ui/Button';
 import { Icon } from '../components/ui/Icon';
@@ -90,6 +91,7 @@ export function PerfilView() {
               onCambio={(mediosPago) => setEstado((actual) => (actual.tipo === 'listo' ? { ...actual, mediosPago } : actual))}
               onMensaje={setMensaje}
             />
+            <PermisosCard rol={estado.usuario.rol} permisos={estado.usuario.permisos ?? []} />
           </div>
 
           {modal === 'telefono' && (

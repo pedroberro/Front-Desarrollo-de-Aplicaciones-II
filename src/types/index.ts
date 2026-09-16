@@ -9,6 +9,7 @@ export interface Usuario {
   rol: Rol;
   estado: string;
   createdAt: string;
+  permisos: string[];
 }
 
 export interface Sede {
