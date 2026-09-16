@@ -1,4 +1,4 @@
-import { forwardRef, useId, type InputHTMLAttributes, type ReactNode } from 'react';
+import { forwardRef, useId, useState, type InputHTMLAttributes, type ReactNode } from 'react';
 import { Icon, type IconName } from './Icon';
 
 interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
@@ -6,7 +6,7 @@ interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   hint?: ReactNode;
   error?: ReactNode;
   icon?: IconName;
-  /** Content rendered inside the box, after the input (e.g. a show-password toggle). */
+  /** Content rendered inside the box, after the input. */
   trailing?: ReactNode;
   /** Content rendered under the box, before hint and error (e.g. a strength meter). */
   below?: ReactNode;
@@ -15,10 +15,13 @@ interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
 }
 
 export const Input = forwardRef<HTMLInputElement, InputProps>(
-  ({ label, hint, error, icon, trailing, below, mono, showRequired, className = '', id, ...props }, ref) => {
+  ({ label, hint, error, icon, trailing, below, mono, showRequired, className = '', id, type, ...props }, ref) => {
     const generatedId = useId();
     const inputId = id ?? generatedId;
     const messageId = `${inputId}-msg`;
+    // Every hidden field gets a show/hide toggle, so no screen has to remember to add it.
+    const [visible, setVisible] = useState(false);
+    const esSecreto = type === 'password';
 
     return (
       <div className={`field ${className}`}>
@@ -32,12 +35,25 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
           <input
             ref={ref}
             id={inputId}
+            type={esSecreto && visible ? 'text' : type}
             className={mono ? 'mono' : ''}
             aria-invalid={error ? true : undefined}
             aria-describedby={error || hint ? messageId : undefined}
             {...props}
           />
           {trailing}
+          {esSecreto && !props.disabled && (
+            <button
+              type="button"
+              className="input-icon -mr-1 grid h-7 w-7 flex-none place-items-center rounded hover:text-slate-600"
+              onClick={() => setVisible((v) => !v)}
+              aria-label={`${visible ? 'Ocultar' : 'Mostrar'} ${label?.toLowerCase() ?? 'valor'}`}
+              aria-controls={inputId}
+              aria-pressed={visible}
+            >
+              <Icon name={visible ? 'eyeOff' : 'eye'} />
+            </button>
+          )}
         </div>
         {below}
         {error ? (

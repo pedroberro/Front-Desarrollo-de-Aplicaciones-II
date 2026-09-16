@@ -176,7 +176,6 @@ export function RegistroView() {
             <PasswordInput
               label="Contraseña"
               showRequired
-              toggle
               placeholder="••••••••"
               autoComplete="new-password"
               maxLength={100}

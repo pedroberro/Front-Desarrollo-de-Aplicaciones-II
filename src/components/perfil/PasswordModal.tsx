@@ -89,7 +89,6 @@ export function PasswordModal({ onGuardado, onCerrar }: PasswordModalProps) {
       />
       <PasswordInput
         label="Nueva contraseña"
-        toggle
         autoComplete="new-password"
         maxLength={100}
         value={nueva}
