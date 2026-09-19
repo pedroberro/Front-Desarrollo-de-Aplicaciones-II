@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../hooks/useAuth';
 import { Icon } from '../ui/Icon';
 import { HOME_PATH } from '../../routes';
+import { ThemeToggle } from './ThemeToggle';
 
 // Sections from the wireframes that do not exist yet: shown, but not navigable.
 const SECCIONES_PENDIENTES = ['Empresas', 'Mis reservas'];
@@ -43,8 +44,11 @@ export function Navbar() {
         ))}
       </nav>
 
-      <div className="relative" ref={menuRef}>
-        <button
+      <div className="flex items-center gap-2">
+        <ThemeToggle />
+
+        <div className="relative" ref={menuRef}>
+          <button
           type="button"
           className="t-sm flex items-center gap-2 rounded-md px-2 py-1 hover:bg-slate-100"
           onClick={() => setMenuAbierto((v) => !v)}
@@ -54,8 +58,8 @@ export function Navbar() {
           <Icon name="user" className="text-slate-500" />
           {usuario?.nombre}
           <Icon name="chevDown" size={14} className="text-slate-400" />
-        </button>
-        {menuAbierto && (
+          </button>
+          {menuAbierto && (
           <div className="menu" role="menu">
             <Link to="/perfil" className="menu-item" role="menuitem" onClick={() => setMenuAbierto(false)}>
               <Icon name="user" className="text-slate-500" />
@@ -66,7 +70,8 @@ export function Navbar() {
               Cerrar sesión
             </button>
           </div>
-        )}
+          )}
+        </div>
       </div>
     </header>
   );

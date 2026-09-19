@@ -1,5 +1,6 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
+import { ThemeProvider } from './context/ThemeContext';
 import { AppShell } from './components/Layout/AppShell';
 import { GuestRoute, ProtectedRoute } from './components/Layout/ProtectedRoute';
 import { LoginView } from './views/LoginView';
@@ -14,7 +15,8 @@ import { HOME_PATH } from './routes';
 function App() {
   return (
     <BrowserRouter>
-      <AuthProvider>
+      <ThemeProvider>
+        <AuthProvider>
         <Routes>
           <Route element={<AppShell />}>
             <Route path="/login" element={<GuestRoute redirectTo={HOME_PATH}><LoginView /></GuestRoute>} />
@@ -27,7 +29,8 @@ function App() {
             <Route path="*" element={<Navigate to={HOME_PATH} replace />} />
           </Route>
         </Routes>
-      </AuthProvider>
+        </AuthProvider>
+      </ThemeProvider>
     </BrowserRouter>
   );
 }

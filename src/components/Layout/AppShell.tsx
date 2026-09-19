@@ -1,5 +1,6 @@
 import { Outlet, useLocation } from 'react-router-dom';
 import { Navbar } from './Navbar';
+import { ThemeToggle } from './ThemeToggle';
 
 const AUTH_SCREENS = ['/login', '/registro', '/olvide-password', '/reset-password', '/confirmar-email'];
 
@@ -9,6 +10,7 @@ export function AppShell() {
   if (AUTH_SCREENS.includes(pathname)) {
     return (
       <main className="min-h-screen bg-slate-50">
+        <ThemeToggle floating />
         <Outlet />
       </main>
     );
