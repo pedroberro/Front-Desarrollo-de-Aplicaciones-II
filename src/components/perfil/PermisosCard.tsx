@@ -16,6 +16,8 @@ const PERMISOS: Record<string, string> = {
   RESERVAS_VER_PROPIAS: 'Ver sus reservas',
   RESERVAS_VER_DE_SUS_ESPACIOS: 'Ver las reservas de sus espacios',
   RESERVAS_VER_TODAS: 'Ver todas las reservas',
+  RESERVAS_GESTIONAR: 'Crear, mover y cancelar reservas de clientes',
+  BLOQUEOS_GESTIONAR: 'Bloquear espacios y pisos',
   USUARIOS_VER: 'Ver usuarios',
   USUARIOS_BLOQUEAR: 'Bloquear usuarios',
 };

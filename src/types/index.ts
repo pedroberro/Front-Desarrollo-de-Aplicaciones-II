@@ -12,38 +12,6 @@ export interface Usuario {
   permisos: string[];
 }
 
-export interface Sede {
-  id: number;
-  nombre: string;
-  direccion: string;
-  ciudad: string;
-}
-
-export interface TipoEspacio {
-  id: number;
-  nombre: string;
-}
-
-export interface Espacio {
-  id: number;
-  nombre: string;
-  tipo: TipoEspacio;
-  sede: Sede;
-  capacidad: number;
-  descripcion: string;
-  precioPorHora: number;
-  disponible: boolean;
-  imagenUrl?: string;
-}
-
-export interface PageResponse<T> {
-  content: T[];
-  totalElements: number;
-  totalPages: number;
-  number: number;
-  size: number;
-}
-
 export interface ApiErrorBody {
   message: string;
   errors?: Record<string, string>;
@@ -110,13 +78,4 @@ export interface MedioPagoResumen {
   principal: boolean;
   verificado: boolean;
   estado: string;
-}
-
-export interface EspaciosFilters {
-  sede?: string;
-  tipo?: string;
-  capacidad?: number;
-  fecha?: string;
-  page?: number;
-  size?: number;
 }
