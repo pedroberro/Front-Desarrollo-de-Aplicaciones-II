@@ -1,6 +1,7 @@
 import { useState, type FormEvent } from 'react';
 import { getApiErrorMessage, getApiFieldErrors, getApiStatus } from '../../api/apiError';
 import { usuariosApi } from '../../api/usuariosApi';
+import { useAuth } from '../../hooks/useAuth';
 import { PasswordInput } from '../auth/PasswordInput';
 import { PasswordStrength } from '../auth/PasswordStrength';
 import { Button } from '../ui/Button';
@@ -16,6 +17,7 @@ interface PasswordModalProps {
 }
 
 export function PasswordModal({ onGuardado, onCerrar }: PasswordModalProps) {
+  const { iniciarSesion } = useAuth();
   const [actual, setActual] = useState('');
   const [nueva, setNueva] = useState('');
   const [confirmacion, setConfirmacion] = useState('');
@@ -41,7 +43,7 @@ export function PasswordModal({ onGuardado, onCerrar }: PasswordModalProps) {
     setEnviando(true);
     setErrorGeneral(null);
     try {
-      await usuariosApi.cambiarPassword({ passwordActual: actual, passwordNueva: nueva });
+      iniciarSesion(await usuariosApi.cambiarPassword({ passwordActual: actual, passwordNueva: nueva }));
       onGuardado();
     } catch (err) {
       const porCampo = getApiFieldErrors(err);

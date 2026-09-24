@@ -1,5 +1,5 @@
 import apiClient from './axiosClient';
-import type { ChangePasswordRequest, MedioPagoRequest, MedioPagoResumen, MedioPagoUpdateRequest, UpdateMeRequest, Usuario } from '../types';
+import type { AuthResponse, ChangePasswordRequest, MedioPagoRequest, MedioPagoResumen, MedioPagoUpdateRequest, UpdateMeRequest, Usuario } from '../types';
 
 export const usuariosApi = {
   async obtenerPerfil(): Promise<Usuario> {
@@ -12,8 +12,10 @@ export const usuariosApi = {
     return response.data;
   },
 
-  async cambiarPassword(data: ChangePasswordRequest): Promise<void> {
-    await apiClient.post('/auth/change-password', data);
+  /** Other sessions end on the server; this one continues with the new token it returns. */
+  async cambiarPassword(data: ChangePasswordRequest): Promise<AuthResponse> {
+    const response = await apiClient.post<AuthResponse>('/auth/change-password', data);
+    return response.data;
   },
 
   async listarMediosPago(): Promise<MedioPagoResumen[]> {
