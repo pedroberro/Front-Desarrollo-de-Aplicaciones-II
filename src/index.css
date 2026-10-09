@@ -34,6 +34,9 @@
   --busy: var(--color-rose-600);
   --busy-50: var(--color-rose-50);
   --busy-200: var(--color-rose-200);
+  /* Loading skeletons: one step off the card, in the same family as the surfaces. */
+  --sk-base: var(--color-slate-200);
+  --sk-brillo: var(--color-slate-100);
 }
 
 /* Dark theme: the accent turns light (so text on it turns navy) and the slate scale is
@@ -44,11 +47,13 @@
   --accent-50: rgba(159, 182, 217, 0.12);
   --accent-200: rgba(159, 182, 217, 0.32);
   --on-accent: #0d1b2f;
+  --sk-base: #1c2b40;
+  --sk-brillo: #27374e;
   --color-slate-100: #eef2f8;
   --color-slate-200: #d3dce8;
   --color-slate-300: #b4c1d4;
   --color-slate-400: #8c9db6;
-  --color-slate-500: #6b7f9c;
+  --color-slate-500: #8194b0;
   --color-slate-600: #2a4366;
   --color-slate-700: #1c3049;
   --color-slate-800: #13233a;
@@ -72,6 +77,17 @@ body {
 .dark .text-slate-900, .dark .text-gray-900 { color: var(--color-slate-100); }
 .dark .text-slate-700, .dark .text-gray-700, .dark .text-gray-600 { color: var(--color-slate-300); }
 .dark .text-slate-500, .dark .text-gray-500 { color: var(--color-slate-400); }
+.dark .text-slate-600 { color: var(--color-slate-300); }
+.dark .bg-slate-100 { background: var(--color-slate-800); }
+.dark .border-slate-300 { border-color: var(--color-slate-600); }
+/* State colours used as text: the 600/700 shades are made for white and sink into the navy. */
+.dark .text-rose-600 { color: var(--color-rose-400); }
+.dark .text-rose-700 { color: var(--color-rose-300); }
+.dark .text-emerald-600 { color: var(--color-emerald-400); }
+.dark .text-emerald-700 { color: var(--color-emerald-300); }
+.dark .text-amber-600 { color: var(--color-amber-400); }
+.dark .text-amber-700 { color: var(--color-amber-300); }
+.dark .bg-rose-50 { background: rgba(225, 29, 72, 0.14); }
 .dark .border-slate-100, .dark .border-slate-200, .dark .border-gray-100, .dark .border-gray-200 { border-color: var(--color-slate-700); }
 .dark .bg-slate-200 { background: var(--color-slate-700); }
 
@@ -202,5 +218,6 @@ body {
   .dark .muted { color: var(--color-slate-400); }
   .dark .muted2, .dark .input-icon { color: var(--color-slate-500); }
   .dark .empty-ic, .dark .b-neutral { background: var(--color-slate-800); border-color: var(--color-slate-700); }
+  .dark .b-neutral { color: var(--color-slate-300); }
   .dark .card-chip, .dark .b-accent { background: var(--accent-50); }
 }

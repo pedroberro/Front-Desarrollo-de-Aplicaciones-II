@@ -65,7 +65,7 @@
   .textarea-error { border-color: var(--busy); }
 
   /* Skeleton */
-  .sk { background: linear-gradient(90deg, var(--color-slate-200), var(--color-slate-100), var(--color-slate-200)); background-size: 200% 100%; border-radius: 6px; animation: shimmer 1.4s linear infinite; }
+  .sk { background: linear-gradient(90deg, var(--sk-base), var(--sk-brillo), var(--sk-base)); background-size: 200% 100%; border-radius: 6px; animation: shimmer 1.4s linear infinite; }
   @keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
 
   /* Company / building cards with the placeholder illustration */
@@ -207,6 +207,9 @@
   .dark .tbl th, .dark .floor-num, .dark .pasillo { background: var(--color-slate-800); }
   .dark .floor-row, .dark .agenda-head, .dark .plano, .dark .combo, .dark .toggle, .dark .textarea, .dark .monogram, .dark .cover-tag { background: var(--color-slate-900); color: var(--color-slate-100); border-color: var(--color-slate-700); }
   .dark .seg, .dark .chip, .dark .tab-count { background: var(--color-slate-800); color: var(--color-slate-300); }
+  .dark .seg-i { color: var(--color-slate-300); }
+  .dark .floor-num { color: var(--color-slate-200); }
+  .dark .floor-row:hover .floor-num, .dark .tile-sel .tile-code { color: var(--on-accent); }
   .dark .seg-on { background: var(--color-slate-600); color: #fff; }
   .dark .navlink.navlink-on, .dark .crumb-now, .dark .tile-code, .dark .cal-head b, .dark .date-box b { color: var(--color-slate-100); }
   .dark .tile-libre { background-color: rgba(5, 150, 105, 0.14); }

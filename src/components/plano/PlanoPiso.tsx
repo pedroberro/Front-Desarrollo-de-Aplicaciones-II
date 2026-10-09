@@ -99,7 +99,7 @@ function Espacio({ espacio: e, seleccionado, abrible, arriba, referencia, modo, 
         aria-label={`${e.codigo}, ${e.tipoEtiqueta}, ${e.capacidad} ${e.capacidad === 1 ? 'persona' : 'personas'}, ${texto}`}
       >
         {e.ventana && <Icon name="window" size={14} className="tile-winic" />}
-        {seleccionado ? <Icon name="check" size={16} className="absolute top-1.5 right-1.5 text-white" /> : <i className="tile-glyph" aria-hidden="true" />}
+        {seleccionado ? <Icon name="check" size={16} className="absolute top-1.5 right-1.5 text-[color:var(--on-accent)]" /> : <i className="tile-glyph" aria-hidden="true" />}
         <span className="tile-code">{e.codigo}</span>
         {sala && <span className="tile-sub">{e.tipoEtiqueta} · {e.capacidad} personas</span>}
         <span className="tile-lbl">{texto}</span>
@@ -166,7 +166,7 @@ export function Referencias() {
         {items.map((i) => (
           <li key={i.titulo} className="flex items-start gap-3">
             <span className={`swatch tile ${i.clase}`} aria-hidden="true">
-              {i.clase === 'tile-sel' ? <Icon name="check" size={12} className="absolute top-0.5 right-0.5 text-white" /> : <i className="tile-glyph" />}
+              {i.clase === 'tile-sel' ? <Icon name="check" size={12} className="absolute top-0.5 right-0.5 text-[color:var(--on-accent)]" /> : <i className="tile-glyph" />}
             </span>
             <span className="flex flex-col">
               <b className="t-sm font-semibold">{i.titulo}</b>
