@@ -31,9 +31,14 @@ export function ModalConfirmacion({ espacio, edificio, piso, franja, onCerrar, o
   // Until the customer picks one, the main card is the default.
   const medioPagoId = medioElegido ?? medios.datos?.find((m) => m.principal)?.id ?? medios.datos?.[0]?.id ?? null;
   const sinMedios = medios.estado.tipo === 'listo' && medios.estado.datos.length === 0;
+  // A customer cannot hold two spaces at the same time. The API only rejects overlaps on the same
+  // space, so the check across spaces is done here against the customer's upcoming bookings.
+  const mias = useCarga(() => reservasApi.mias(), [], 'No pudimos revisar tus reservas.');
+  const choque = mias.datos ? reservaQueChoca(mias.datos.proximas, franja) : undefined;
+  const revisando = mias.estado.tipo === 'cargando';
 
   const confirmar = async () => {
-    if (medioPagoId === null) return;
+    if (medioPagoId === null || choque || revisando) return;
     setEnviando(true);
     setError(null);
     try {
@@ -69,7 +74,7 @@ export function ModalConfirmacion({ espacio, edificio, piso, franja, onCerrar, o
           <button type="button" className="btn btn-secondary" onClick={onCerrar} disabled={enviando}>
             Cancelar
           </button>
-          <button type="button" className="btn btn-primary" onClick={confirmar} disabled={enviando || medioPagoId === null} aria-busy={enviando}>
+          <button type="button" className="btn btn-primary" onClick={confirmar} disabled={enviando || medioPagoId === null || !!choque || revisando} aria-busy={enviando}>
             {enviando ? 'Confirmando…' : 'Confirmar reserva'}
           </button>
         </>
@@ -83,6 +88,16 @@ export function ModalConfirmacion({ espacio, edificio, piso, franja, onCerrar, o
           </div>
         ))}
       </dl>
+      {choque && (
+        <p className="alert alert-error" role="alert">
+          <Icon name="alert" size={14} className="mt-[3px]" />
+          <span>
+            Ya tenés la reserva <b className="mono">{choque.codigo}</b> en {choque.espacio.codigo} ({choque.edificio.nombre} · {choque.piso.nombre}) de{' '}
+            <span className="num">{rangoHorario(choque.inicio, choque.fin)}</span> ese día. No podés reservar dos espacios en el mismo horario: elegí otra
+            franja o cancelá esa reserva desde <Link to="/mis-reservas" className="link">Mis reservas</Link>.
+          </span>
+        </p>
+      )}
       <SelectorMedioPago
         carga={medios.estado}
         valor={medioPagoId}
@@ -112,6 +127,19 @@ export function ModalConfirmacion({ espacio, edificio, piso, franja, onCerrar, o
         </p>
       )}
     </Modal>
+  );
+}
+
+/** "2026-10-12T09:00:00" and "2026-10-12T09:00" name the same minute: compare up to the minute. */
+const minuto = (fechaHora: string) => fechaHora.slice(0, 16);
+
+/** The customer's active booking that overlaps the slot, if any. Ranges are half-open, like the API's. */
+function reservaQueChoca(reservas: Reserva[], franja: Franja): Reserva | undefined {
+  return reservas.find(
+    (r) =>
+      (r.estado === 'PENDIENTE' || r.estado === 'CONFIRMADA') &&
+      minuto(r.inicio) < minuto(franja.fin) &&
+      minuto(franja.inicio) < minuto(r.fin),
   );
 }
 
