@@ -1,9 +1,10 @@
 // Placeholder illustration of a building, as drawn in the wireframes: two towers, a low block and the
-// ground line. The palette comes from the company or building ("indigo", "sky" or "slate"); `variante`
+// ground line. The palette comes from the company or building ("indigo", "sky" or "slate"; "indigo"
+// is the catalog's name for the brand blue and is drawn with the logo's steel tints); `variante`
 // shifts the window pattern so cards next to each other do not look identical.
 
 const PALETAS: Record<string, { fondo: string; fuerte: string; suave: string; suelo: string }> = {
-  indigo: { fondo: '#eef2ff', fuerte: '#a5b4fc', suave: '#c7d2fe', suelo: '#c7d2fe' },
+  indigo: { fondo: '#eef2f8', fuerte: '#9fb6d9', suave: '#c9d4e5', suelo: '#c9d4e5' },
   sky: { fondo: '#f0f9ff', fuerte: '#7dd3fc', suave: '#bae6fd', suelo: '#bae6fd' },
   slate: { fondo: '#f1f5f9', fuerte: '#cbd5e1', suave: '#e2e8f0', suelo: '#e2e8f0' },
 };

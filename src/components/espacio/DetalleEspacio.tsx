@@ -100,7 +100,7 @@ export function DetalleEspacio({ espacio, estado }: { espacio: EspacioDetalle; e
 /** Placeholder photo in the wireframe style: a desk with a monitor, or a meeting table, and maybe a window. */
 function Foto({ sala, ventana, etiqueta, grande = false }: { sala: boolean; ventana: boolean; etiqueta?: string; grande?: boolean }) {
   return (
-    <div className={`relative overflow-hidden rounded-md border border-slate-200 bg-indigo-50 ${grande ? 'h-[270px]' : 'h-[92px]'}`}>
+    <div className={`relative overflow-hidden rounded-md border border-slate-200 bg-accent-50 ${grande ? 'h-[270px]' : 'h-[92px]'}`}>
       <svg viewBox="0 0 420 270" preserveAspectRatio="xMidYMid slice" className="absolute inset-0 h-full w-full" aria-hidden="true">
         <rect x="0" y="196" width="420" height="74" fill="#e2e8f0" />
         {ventana && (

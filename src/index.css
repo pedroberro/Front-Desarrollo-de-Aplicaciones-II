@@ -2,24 +2,58 @@
 @import "./styles/reservas.css";
 
 /* Planta Libre design system, ported from the wireframes.
-   Tokens follow the Tailwind scale: slate for neutrals, a single indigo-600 accent,
-   and emerald / rose / amber reserved for states. Components below are the only
-   place these values are spelled out; screens compose the classes. */
+   Colours come from the logo: navy for text and the dark theme, steel blue as the single UI
+   accent, and coral / peach only for brand moments (logo, active section). Coral is not the
+   accent because it would read as the rose "ocupado" and amber "pendiente" states.
+   Emerald / rose / amber stay reserved for states. Components below are the only place these
+   values are spelled out; screens compose the classes. */
 
 @theme {
   --font-sans: "IBM Plex Sans", "Segoe UI", Helvetica, Arial, sans-serif;
   --font-mono: "IBM Plex Mono", "SF Mono", Menlo, monospace;
 }
 
+/* Lets screens use text-accent, bg-accent-50, border-accent-200... and follow the theme. */
+@theme inline {
+  --color-accent: var(--accent);
+  --color-accent-700: var(--accent-700);
+  --color-accent-50: var(--accent-50);
+  --color-accent-200: var(--accent-200);
+  --color-brand: var(--brand);
+}
+
 :root {
-  --accent: var(--color-indigo-600);
-  --accent-700: var(--color-indigo-700);
-  --accent-50: var(--color-indigo-50);
-  --accent-200: var(--color-indigo-200);
+  --accent: #203652;
+  --accent-700: #0d1b2f;
+  --accent-50: #eef2f8;
+  --accent-200: #c9d4e5;
+  --on-accent: #fff;
+  --brand: #e17e63;
+  --brand-2: #eaa06c;
   --ok: var(--color-emerald-600);
   --busy: var(--color-rose-600);
   --busy-50: var(--color-rose-50);
   --busy-200: var(--color-rose-200);
+}
+
+/* Dark theme: the accent turns light (so text on it turns navy) and the slate scale is
+   re-tinted towards the logo's navy, which recolours every dark rule and utility at once. */
+.dark {
+  --accent: #9fb6d9;
+  --accent-700: #c9d6ea;
+  --accent-50: rgba(159, 182, 217, 0.12);
+  --accent-200: rgba(159, 182, 217, 0.32);
+  --on-accent: #0d1b2f;
+  --color-slate-100: #eef2f8;
+  --color-slate-200: #d3dce8;
+  --color-slate-300: #b4c1d4;
+  --color-slate-400: #8c9db6;
+  --color-slate-500: #6b7f9c;
+  --color-slate-600: #2a4366;
+  --color-slate-700: #1c3049;
+  --color-slate-800: #13233a;
+  --color-slate-900: #0d1b2f;
+  --color-slate-950: #081322;
 }
 
 body {
@@ -67,7 +101,7 @@ body {
   .btn-sm { height: 28px; padding: 0 10px; font-size: 13px; }
   .btn-lg { height: 44px; padding: 0 20px; font-size: 15px; }
   .btn-icon { padding: 0; width: 28px; }
-  .btn-primary { background: var(--accent); color: #fff; }
+  .btn-primary { background: var(--accent); color: var(--on-accent); }
   .btn-primary:hover:not(:disabled) { background: var(--accent-700); }
   .btn-secondary { background: #fff; color: var(--color-slate-700); border-color: var(--color-slate-300); }
   .btn-secondary:hover:not(:disabled) { background: var(--color-slate-50); }
@@ -163,10 +197,10 @@ body {
   .dark .card-hd, .dark .modal-hd, .dark .modal-ft { border-color: var(--color-slate-700); }
   .dark .modal-ft, .dark .row-add, .dark .alert-info { background: var(--color-slate-800); }
   .dark .row-add { border-color: var(--color-slate-600); color: var(--color-slate-100); }
-  .dark .row-add:hover:not(:disabled) { background: var(--color-indigo-950); }
+  .dark .row-add:hover:not(:disabled) { background: var(--accent-50); }
   .dark .label, .dark .menu-item, .dark .btn-secondary, .dark .btn-danger { color: var(--color-slate-200); }
   .dark .muted { color: var(--color-slate-400); }
   .dark .muted2, .dark .input-icon { color: var(--color-slate-500); }
   .dark .empty-ic, .dark .b-neutral { background: var(--color-slate-800); border-color: var(--color-slate-700); }
-  .dark .card-chip, .dark .b-accent { background: var(--color-indigo-950); }
+  .dark .card-chip, .dark .b-accent { background: var(--accent-50); }
 }

@@ -32,7 +32,7 @@ export function ListaEspacios({ plano, onAbrir, modo }: ListaEspaciosProps) {
           <thead>
             <tr>
               <th aria-sort={ascendente ? 'ascending' : 'descending'}>
-                <button type="button" className="flex items-center gap-1 uppercase text-indigo-600" onClick={() => setAscendente((v) => !v)}>
+                <button type="button" className="flex items-center gap-1 uppercase text-accent" onClick={() => setAscendente((v) => !v)}>
                   Espacio <Icon name="chevDown" size={14} className={ascendente ? '' : 'rotate-180'} />
                 </button>
               </th>
@@ -61,7 +61,7 @@ export function ListaEspacios({ plano, onAbrir, modo }: ListaEspaciosProps) {
                   <td className="num hidden md:table-cell">{e.capacidad}</td>
                   <td className="hidden lg:table-cell">
                     {e.ventana ? (
-                      <span className="t-sm flex items-center gap-1 text-indigo-600">
+                      <span className="t-sm flex items-center gap-1 text-accent">
                         <Icon name="sun" size={14} /> Sí
                       </span>
                     ) : (

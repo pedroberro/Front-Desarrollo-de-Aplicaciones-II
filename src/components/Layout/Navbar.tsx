@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../hooks/useAuth';
 import { Icon } from '../ui/Icon';
+import { LogoMark } from '../ui/Logo';
 import { HOME_PATH } from '../../routes';
 import { ThemeToggle } from './ThemeToggle';
 
@@ -53,7 +54,7 @@ export function Navbar() {
   return (
     <header className="topbar relative">
       <Link to={HOME_PATH} className="brand">
-        <Icon name="layers" size={20} className="text-indigo-600" />
+        <LogoMark size={22} />
         Planta Libre
       </Link>
       {esAdmin && (

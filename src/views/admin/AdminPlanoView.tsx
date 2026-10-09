@@ -168,7 +168,7 @@ export function AdminPlanoView() {
                   {!delDia.datos && <div className="sk h-[56px]" />}
                   {delDia.datos?.content.length === 0 && <p className="t-sm muted">Sin reservas ese día.</p>}
                   {delDia.datos?.content.map((r) => (
-                    <div key={r.id} className={`flex flex-wrap items-center gap-4 rounded-lg border px-4 py-3 ${editando?.id === r.id ? 'border-indigo-200 bg-indigo-50' : 'border-slate-200'}`}>
+                    <div key={r.id} className={`flex flex-wrap items-center gap-4 rounded-lg border px-4 py-3 ${editando?.id === r.id ? 'border-accent-200 bg-accent-50' : 'border-slate-200'}`}>
                       <b className="mono w-[76px]">{r.codigo}</b>
                       <span className="flex min-w-[160px] grow items-center gap-2">
                         <span className="avatar">{iniciales(r.cliente.nombre)}</span>
@@ -314,7 +314,7 @@ function PanelAdminEspacio(p: PanelAdminEspacioProps) {
         {actual && actual.cliente && (
           <button
             type="button"
-            className="flex items-center gap-3 rounded-lg border border-slate-200 p-3 text-left hover:border-indigo-200"
+            className="flex items-center gap-3 rounded-lg border border-slate-200 p-3 text-left hover:border-accent-200"
             onClick={() => actual.reservaId && p.onEditar(actual.reservaId)}
           >
             <span className="avatar avatar-lg">{iniciales(actual.cliente)}</span>
@@ -362,7 +362,7 @@ function PanelAdminEspacio(p: PanelAdminEspacioProps) {
               <p className="t-sm num flex items-center gap-2">
                 {movida && <s className="text-slate-400">{rangoHorario(p.editando.inicio, p.editando.fin)}</s>}
                 {movida && <Icon name="chevRight" size={12} className="text-slate-400" />}
-                <b className="text-indigo-700">
+                <b className="text-accent-700">
                   {fechaDe(franja.inicio) !== fechaDe(p.editando.inicio) ? `${fechaLarga(fechaDe(franja.inicio), false)}, ` : ''}
                   {rangoHorario(franja.inicio, franja.fin)}
                 </b>

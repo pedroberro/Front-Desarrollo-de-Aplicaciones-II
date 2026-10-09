@@ -91,8 +91,8 @@ export function AgendaView() {
           </button>
         </div>
         <ul className="t-xs muted ml-auto flex flex-col gap-1">
-          <li className="flex items-center gap-2"><span className="h-3 w-5 rounded-sm border border-slate-300 border-l-[3px] border-l-indigo-600 bg-slate-100" /> Reserva confirmada</li>
-          <li className="flex items-center gap-2"><span className="h-3 w-5 rounded-sm border border-dashed border-indigo-600 bg-white" /> Reserva pendiente</li>
+          <li className="flex items-center gap-2"><span className="h-3 w-5 rounded-sm border border-slate-300 border-l-[3px] border-l-accent bg-slate-100" /> Reserva confirmada</li>
+          <li className="flex items-center gap-2"><span className="h-3 w-5 rounded-sm border border-dashed border-accent bg-white" /> Reserva pendiente</li>
           <li className="flex items-center gap-2"><span className="agenda-blq h-3 w-5 rounded-sm" /> Bloqueo (sin usuario)</li>
         </ul>
       </div>

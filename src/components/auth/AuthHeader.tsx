@@ -1,4 +1,4 @@
-import { Icon } from '../ui/Icon';
+import { LogoCompleto } from '../ui/Logo';
 
 interface AuthHeaderProps {
   title: string;
@@ -8,9 +8,7 @@ interface AuthHeaderProps {
 export function AuthHeader({ title, subtitle }: AuthHeaderProps) {
   return (
     <div className="flex flex-col items-center gap-2.5 text-center">
-      <div className="grid h-11 w-11 place-items-center rounded-[10px] bg-indigo-600 text-white">
-        <Icon name="layers" size={24} />
-      </div>
+      <LogoCompleto size={88} />
       <h1 className="t-2xl font-semibold">{title}</h1>
       <p className="t-sm muted">{subtitle}</p>
     </div>

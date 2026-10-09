@@ -33,7 +33,7 @@ export function CorreoEnviado({ children, onReenviar }: CorreoEnviadoProps) {
   return (
     <div className="card-bd flex flex-col gap-4 !p-6">
       <div className="flex items-start gap-3">
-        <span className="grid h-9 w-9 flex-none place-items-center rounded-full bg-indigo-50 text-indigo-700">
+        <span className="grid h-9 w-9 flex-none place-items-center rounded-full bg-accent-50 text-accent-700">
           <Icon name="mail" />
         </span>
         <p className="t-sm text-slate-700">{children}</p>

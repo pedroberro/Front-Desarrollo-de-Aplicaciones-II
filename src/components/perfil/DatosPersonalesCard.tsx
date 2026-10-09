@@ -30,7 +30,7 @@ export function DatosPersonalesCard({ usuario, onCambiarTelefono, onCambiarPassw
       </CardHeader>
       <CardBody className="!px-4 !pt-2 !pb-4">
         <div className="flex items-center gap-3.5 pt-3 pb-4">
-          <span className="grid h-14 w-14 flex-none place-items-center rounded-full bg-indigo-50 text-lg font-semibold text-indigo-700">
+          <span className="grid h-14 w-14 flex-none place-items-center rounded-full bg-accent-50 text-lg font-semibold text-accent-700">
             {iniciales(usuario.nombre)}
           </span>
           <div className="flex flex-col gap-0.5">

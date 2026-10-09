@@ -60,7 +60,7 @@ export function LoginView() {
             {pendiente && (
               <div className="alert alert-info flex-col !items-stretch" role="alert">
                 <div className="flex items-start gap-2">
-                  <Icon name="mail" size={14} className="mt-[3px] text-indigo-700" />
+                  <Icon name="mail" size={14} className="mt-[3px] text-accent-700" />
                   <span className="text-slate-700">
                     Confirmá tu email para ingresar. Te enviamos un link a{' '}
                     <span className="font-medium text-slate-900">{pendiente}</span> cuando te registraste.

@@ -109,7 +109,7 @@ export function BuscadorCliente({ valor, onChange, error }: BuscadorClienteProps
                   <b className="t-sm font-semibold">{c.nombre}</b>
                   <span className="t-xs muted">{c.email}</span>
                 </span>
-                {valor?.id === c.id && <Icon name="check" className="text-indigo-600" />}
+                {valor?.id === c.id && <Icon name="check" className="text-accent" />}
               </button>
             </li>
           ))}
