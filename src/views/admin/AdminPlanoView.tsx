@@ -360,7 +360,7 @@ function PanelAdminEspacio(p: PanelAdminEspacioProps) {
             <div>
               <span className="t-xs muted">Horario</span>
               <p className="t-sm num flex items-center gap-2">
-                {movida && <s className="text-slate-400">{rangoHorario(p.editando.inicio, p.editando.fin)}</s>}
+                {movida && <s className="text-slate-500">{rangoHorario(p.editando.inicio, p.editando.fin)}</s>}
                 {movida && <Icon name="chevRight" size={12} className="text-slate-400" />}
                 <b className="text-accent-700">
                   {fechaDe(franja.inicio) !== fechaDe(p.editando.inicio) ? `${fechaLarga(fechaDe(franja.inicio), false)}, ` : ''}

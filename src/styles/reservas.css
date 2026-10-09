@@ -61,6 +61,7 @@
   .toggle-on .toggle-box { background: var(--accent); border-color: var(--accent); }
 
   .textarea { width: 100%; min-height: 76px; padding: 10px; border: 1px solid var(--color-slate-300); border-radius: 6px; font: 400 14px/1.45 var(--font-sans); color: var(--color-slate-900); resize: vertical; background: #fff; }
+  .textarea::placeholder { color: var(--color-slate-500); }
   .textarea:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-50); }
   .textarea-error { border-color: var(--busy); }
 
@@ -91,7 +92,7 @@
   .win-n { position: absolute; top: -6px; height: 6px; background: #38bdf8; }
   .win-w { position: absolute; left: -6px; width: 6px; background: #38bdf8; }
   .win-e { position: absolute; right: -6px; width: 6px; background: #38bdf8; }
-  .pasillo { grid-column: 1 / -1; height: 58px; display: flex; align-items: center; justify-content: center; font: 600 11px/1 var(--font-mono); letter-spacing: 0.7em; color: var(--color-slate-400); border-top: 1.5px dashed var(--color-slate-300); border-bottom: 1.5px dashed var(--color-slate-300); background: var(--color-slate-50); margin: 0 -22px; }
+  .pasillo { grid-column: 1 / -1; height: 58px; display: flex; align-items: center; justify-content: center; font: 600 11px/1 var(--font-mono); letter-spacing: 0.7em; color: var(--color-slate-500); border-top: 1.5px dashed var(--color-slate-300); border-bottom: 1.5px dashed var(--color-slate-300); background: var(--color-slate-50); margin: 0 -22px; }
 
   .tile { position: relative; min-height: 84px; border-radius: 4px; border: 1.5px solid; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; padding: 8px 6px; text-align: center; font-family: var(--font-sans); background-clip: padding-box; transition: transform 0.12s, box-shadow 0.12s, opacity 0.12s; }
   .tile-sala { min-height: 112px; }
@@ -127,7 +128,7 @@
 
   .tile-servicio { border-style: dashed; border-color: var(--color-slate-400); background-color: var(--color-slate-100); background-image: repeating-linear-gradient(45deg, rgba(148, 163, 184, 0.45) 0 1px, transparent 1px 7px), repeating-linear-gradient(-45deg, rgba(148, 163, 184, 0.45) 0 1px, transparent 1px 7px); color: var(--color-slate-500); }
   .tile-servicio .tile-code { font: 600 11px/1 var(--font-mono); letter-spacing: 0.16em; color: var(--color-slate-600); text-transform: uppercase; }
-  .tile-servicio .tile-sub { font-style: italic; font-size: 10px; }
+  .tile-servicio .tile-sub { font-style: italic; font-size: 10px; color: var(--color-slate-600); }
   .tile-dim { opacity: 0.32; filter: grayscale(0.4); }
 
   /* Legend swatches reuse the tile classes at a small size */
@@ -148,10 +149,10 @@
   .cal-head b { display: block; font: 600 16px/1.2 var(--font-sans); color: var(--color-slate-800); letter-spacing: 0; }
   .cal-head-hoy { color: var(--accent); }
   .cal-head-hoy b { color: var(--accent); }
-  .cal-hora { font: 400 11px/1 var(--font-mono); color: var(--color-slate-400); text-align: right; padding-right: 8px; transform: translateY(-6px); }
-  .cal-col { position: relative; border-left: 1px solid var(--color-slate-200); }
-  .cal-slot { border-top: 1px solid var(--color-slate-100); }
-  .cal-slot-hora { border-top-color: var(--color-slate-200); }
+  .cal-hora { font: 400 11px/1 var(--font-mono); color: var(--color-slate-500); text-align: right; padding-right: 8px; transform: translateY(-6px); }
+  .cal-col { position: relative; border-left: 1px solid var(--grilla-col); }
+  .cal-slot { border-top: 1px solid var(--grilla-media); }
+  .cal-slot-hora { border-top-color: var(--grilla-hora); }
   .cal-slot-libre { cursor: crosshair; }
   .cal-slot-libre:hover { background: var(--accent-50); }
   .cal-pasado { position: absolute; left: 0; right: 0; top: 0; background: repeating-linear-gradient(45deg, rgba(148, 163, 184, 0.18) 0 2px, transparent 2px 7px); background-color: rgba(241, 245, 249, 0.7); pointer-events: none; }
@@ -173,7 +174,13 @@
   .agenda-head { position: sticky; top: 0; z-index: 4; background: #fff; border-bottom: 1px solid var(--color-slate-200); padding: 10px 6px; text-align: center; }
   .agenda-horas { background: #fff; }
   .dark .agenda-horas { background: var(--color-slate-900); }
-  .agenda-col { position: relative; border-left: 1px solid var(--color-slate-200); }
+  .agenda-col { position: relative; border-left: 1px solid var(--grilla-col); }
+  /* Hour line every --px-hora, a fainter one at the half hour. */
+  .grilla-horas {
+    background-image:
+      repeating-linear-gradient(to bottom, var(--grilla-hora) 0 1px, transparent 1px var(--px-hora)),
+      repeating-linear-gradient(to bottom, transparent 0 calc(var(--px-hora) / 2), var(--grilla-media) calc(var(--px-hora) / 2) calc(var(--px-hora) / 2 + 1px), transparent calc(var(--px-hora) / 2 + 1px) var(--px-hora));
+  }
   .agenda-bloque { position: absolute; left: 4px; right: 4px; display: flex; flex-direction: column; align-items: flex-start; justify-content: flex-start; border-radius: 4px; padding: 6px 7px; font-size: 11px; line-height: 1.35; overflow: hidden; text-align: left; border: 1px solid var(--color-slate-200); border-left: 3px solid var(--accent); background: var(--color-slate-100); cursor: pointer; font-family: var(--font-sans); color: var(--color-slate-800); }
   .agenda-bloque:hover { box-shadow: 0 4px 12px rgba(15, 23, 42, 0.14); z-index: 3; }
   .agenda-pend { background: #fff; border: 1.5px dashed var(--accent); border-left-width: 3px; border-left-style: solid; }
@@ -203,7 +210,7 @@
   .banner-busy { background: var(--busy-50); border: 1px solid var(--busy-200); border-radius: 8px; padding: 14px 16px; }
 
   /* Dark theme for the booking screens */
-  .dark .tabs, .dark .tbl th, .dark .tbl td, .dark .floor-row, .dark .floor-num, .dark .agenda-head, .dark .cover, .dark .cal-col, .dark .agenda-col, .dark .date-box { border-color: var(--color-slate-700); }
+  .dark .tabs, .dark .tbl th, .dark .tbl td, .dark .floor-row, .dark .floor-num, .dark .agenda-head, .dark .cover, .dark .date-box { border-color: var(--color-slate-700); }
   .dark .tbl th, .dark .floor-num, .dark .pasillo { background: var(--color-slate-800); }
   .dark .floor-row, .dark .agenda-head, .dark .plano, .dark .combo, .dark .toggle, .dark .textarea, .dark .monogram, .dark .cover-tag { background: var(--color-slate-900); color: var(--color-slate-100); border-color: var(--color-slate-700); }
   .dark .seg, .dark .chip, .dark .tab-count { background: var(--color-slate-800); color: var(--color-slate-300); }
@@ -216,6 +223,7 @@
   .dark .tile-ocupado { background-color: rgba(225, 29, 72, 0.12); }
   .dark .tile-bloqueado { background-color: rgba(217, 119, 6, 0.14); }
   .dark .tile-servicio { background-color: var(--color-slate-800); }
+  .dark .tile-servicio .tile-sub { color: var(--color-slate-400); }
   .dark .tile-sel { background: var(--accent); }
   .dark .tile-sel .tile-winic { color: var(--color-sky-700); }
   .dark .tile-libre .tile-lbl { color: var(--color-emerald-300); }
@@ -224,7 +232,6 @@
   .dark .agenda-bloque { background: var(--color-slate-800); color: var(--color-slate-100); border-color: var(--color-slate-600); }
   .dark .agenda-pend { background: var(--color-slate-900); border-color: var(--accent); }
   .dark .agenda-blq { background-color: rgba(217, 119, 6, 0.12); border-color: var(--color-amber-600); }
-  .dark .cal-slot, .dark .cal-slot-hora { border-color: var(--color-slate-800); }
   .dark .cal-pasado { background-color: rgba(30, 41, 59, 0.7); }
   .dark .barra { background: var(--color-slate-800); border-color: var(--color-slate-700); }
   .dark .floor-row:hover, .dark .combo-item:hover, .dark .combo-item-on { background: var(--accent-50); }

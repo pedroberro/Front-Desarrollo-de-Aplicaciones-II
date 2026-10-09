@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, type CSSProperties } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { getApiErrorMessage } from '../../api/apiError';
 import { adminApi } from '../../api/reservasApi';
@@ -180,13 +180,8 @@ function GrillaAgenda({ espacios, bloques, apertura, cierre, fecha, ahora, onRes
         {espacios.map((e, i) => (
           <div
             key={e.id}
-            className="agenda-col"
-            style={{
-              gridRow: 2,
-              gridColumn: i + 2,
-              height: alto,
-              backgroundImage: `repeating-linear-gradient(to bottom, var(--color-slate-200) 0 1px, transparent 1px ${PX_HORA / 2}px)`,
-            }}
+            className="agenda-col grilla-horas"
+            style={{ gridRow: 2, gridColumn: i + 2, height: alto, '--px-hora': `${PX_HORA}px` } as CSSProperties}
           >
             {bloques
               .filter((b) => b.espacioId === e.id)
@@ -203,7 +198,7 @@ function GrillaAgenda({ espacios, bloques, apertura, cierre, fecha, ahora, onRes
                     onClick={() => (reserva ? onReserva(b.id) : onBloqueo(b))}
                     title={reserva ? `${b.cliente?.nombre} · ${rangoHorario(b.inicio, b.fin)}` : `${b.motivoEtiqueta} · ${b.detalle}`}
                   >
-                    <span className="num block text-[10px] text-slate-500">
+                    <span className="num block text-[10px] text-slate-600">
                       {fechaDe(b.inicio) === fecha ? horaDe(b.inicio) : apertura} – {fechaDe(b.fin) === fecha ? horaDe(b.fin) : cierre}
                     </span>
                     <b className="block truncate font-semibold">{reserva ? b.cliente?.nombre : b.detalle || b.motivoEtiqueta}</b>

@@ -46,7 +46,7 @@ export function BarraOcupacion({ apertura, cierre, fecha, ocupaciones, esta, con
           </span>
         )}
       </div>
-      <div className="mono flex justify-between text-[11px] text-slate-400">
+      <div className="mono flex justify-between text-[11px] text-slate-500">
         <span>{apertura}</span>
         <span>{String(Math.floor(medio / 60)).padStart(2, '0')}:00</span>
         <span>{cierre}</span>

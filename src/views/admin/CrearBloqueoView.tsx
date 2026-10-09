@@ -1,4 +1,4 @@
-import { useEffect, useState, type FormEvent } from 'react';
+import { useEffect, useState, type CSSProperties, type FormEvent } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { catalogoApi } from '../../api/catalogoApi';
 import { getApiErrorMessage } from '../../api/apiError';
@@ -292,12 +292,12 @@ function DiaVertical({
         ))}
       </div>
       <div
-        className="agenda-col grow"
-        style={{ height: alto, backgroundImage: `repeating-linear-gradient(to bottom, var(--color-slate-200) 0 1px, transparent 1px ${PX_HORA}px)` }}
+        className="agenda-col grilla-horas grow"
+        style={{ height: alto, '--px-hora': `${PX_HORA}px` } as CSSProperties}
       >
         {ocupaciones.map((o, i) => (
           <div key={i} className={`agenda-bloque ${o.tipo === 'BLOQUEO' ? 'agenda-blq' : o.estado === 'PENDIENTE' ? 'agenda-pend' : ''}`} style={bloque(o.inicio, o.fin)}>
-            <span className="num block text-[10px] text-slate-500">
+            <span className="num block text-[10px] text-slate-600">
               {horaDe(o.inicio)} – {horaDe(o.fin)}
             </span>
             <b className="block truncate">{o.tipo === 'BLOQUEO' ? o.motivo : o.cliente}</b>
@@ -306,7 +306,7 @@ function DiaVertical({
         ))}
         {previa && (
           <div className="agenda-bloque agenda-blq z-[2] ring-2 ring-amber-400" style={bloque(previa.inicio, previa.fin)}>
-            <span className="num block text-[10px] text-slate-500">
+            <span className="num block text-[10px] text-slate-600">
               {horaDe(previa.inicio)} – {fechaDe(previa.fin) === fecha ? horaDe(previa.fin) : `${diaMes(fechaDe(previa.fin))} ${horaDe(previa.fin)}`}
             </span>
             <b className="block truncate">{previa.titulo}</b>

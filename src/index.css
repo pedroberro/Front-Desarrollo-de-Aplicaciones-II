@@ -37,6 +37,10 @@
   /* Loading skeletons: one step off the card, in the same family as the surfaces. */
   --sk-base: var(--color-slate-200);
   --sk-brillo: var(--color-slate-100);
+  /* Time grids (admin agenda, weekly calendar): hour lines marked, half hours faint, columns apart. */
+  --grilla-hora: var(--color-slate-200);
+  --grilla-media: var(--color-slate-100);
+  --grilla-col: var(--color-slate-200);
 }
 
 /* Dark theme: the accent turns light (so text on it turns navy) and the slate scale is
@@ -49,6 +53,9 @@
   --on-accent: #0d1b2f;
   --sk-base: #1c2b40;
   --sk-brillo: #27374e;
+  --grilla-hora: #2a4366;
+  --grilla-media: #1a2c43;
+  --grilla-col: #2a4366;
   --color-slate-100: #eef2f8;
   --color-slate-200: #d3dce8;
   --color-slate-300: #b4c1d4;
@@ -101,7 +108,7 @@ body {
   .t-2xl { font-size: 22px; line-height: 30px; letter-spacing: -0.02em; }
   .t-3xl { font-size: 28px; line-height: 36px; letter-spacing: -0.02em; }
   .muted { color: var(--color-slate-500); }
-  .muted2 { color: var(--color-slate-400); }
+  .muted2 { color: var(--color-slate-500); }
   .num { font-variant-numeric: tabular-nums; }
   .mono { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
 
@@ -139,7 +146,7 @@ body {
     flex: 1; min-width: 0; height: 100%; border: 0; outline: none; background: transparent;
     font: 400 14px/1 var(--font-sans); color: inherit; padding: 0;
   }
-  .input input::placeholder { color: var(--color-slate-400); }
+  .input input::placeholder { color: var(--color-slate-500); }
   .input-error, .input-error:focus-within { border-color: var(--busy); box-shadow: 0 0 0 3px var(--busy-50); }
   .input-icon { color: var(--color-slate-400); }
   .input-error .input-icon { color: var(--busy); }
