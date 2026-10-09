@@ -1,7 +1,11 @@
 import axios from 'axios';
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { getApiErrorMessage } from '../../api/apiError';
 import { reservasApi } from '../../api/reservasApi';
+import { usuariosApi } from '../../api/usuariosApi';
+import { useCarga, type Carga } from '../../hooks/useCarga';
+import type { MedioPagoResumen } from '../../types';
 import type { EspacioEnPlano, Franja, FranjaTomadaBody, Reserva } from '../../types/reservas';
 import { duracion, fechaDe, fechaLarga, horaDe, minutosEntre, rangoHorario } from '../../utils/fechas';
 import { Icon } from '../ui/Icon';
@@ -22,12 +26,18 @@ interface ModalConfirmacionProps {
 export function ModalConfirmacion({ espacio, edificio, piso, franja, onCerrar, onCreada, onTomada }: ModalConfirmacionProps) {
   const [enviando, setEnviando] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const medios = useCarga(() => usuariosApi.listarMediosPago(), [], 'No pudimos cargar tus métodos de pago.');
+  const [medioElegido, setMedioElegido] = useState<number | null>(null);
+  // Until the customer picks one, the main card is the default.
+  const medioPagoId = medioElegido ?? medios.datos?.find((m) => m.principal)?.id ?? medios.datos?.[0]?.id ?? null;
+  const sinMedios = medios.estado.tipo === 'listo' && medios.estado.datos.length === 0;
 
   const confirmar = async () => {
+    if (medioPagoId === null) return;
     setEnviando(true);
     setError(null);
     try {
-      onCreada(await reservasApi.crear(espacio.id, franja.inicio, franja.fin));
+      onCreada(await reservasApi.crear(espacio.id, franja.inicio, franja.fin, medioPagoId));
     } catch (err) {
       const body = axios.isAxiosError(err) ? (err.response?.data as FranjaTomadaBody | undefined) : undefined;
       if (body?.code === 'FRANJA_OCUPADA') {
@@ -59,7 +69,7 @@ export function ModalConfirmacion({ espacio, edificio, piso, franja, onCerrar, o
           <button type="button" className="btn btn-secondary" onClick={onCerrar} disabled={enviando}>
             Cancelar
           </button>
-          <button type="button" className="btn btn-primary" onClick={confirmar} disabled={enviando} aria-busy={enviando}>
+          <button type="button" className="btn btn-primary" onClick={confirmar} disabled={enviando || medioPagoId === null} aria-busy={enviando}>
             {enviando ? 'Confirmando…' : 'Confirmar reserva'}
           </button>
         </>
@@ -73,6 +83,21 @@ export function ModalConfirmacion({ espacio, edificio, piso, franja, onCerrar, o
           </div>
         ))}
       </dl>
+      <SelectorMedioPago
+        carga={medios.estado}
+        valor={medioPagoId}
+        onChange={setMedioElegido}
+        onReintentar={medios.recargar}
+        disabled={enviando}
+      />
+      {sinMedios && (
+        <p className="alert alert-warn" role="status">
+          <Icon name="card" size={14} className="mt-[3px]" />
+          <span>
+            Para reservar necesitás un método de pago. Agregalo desde <Link to="/perfil" className="link">tu perfil</Link> y volvé a elegir la franja.
+          </span>
+        </p>
+      )}
       <p className="alert alert-info">
         <Icon name="info" size={14} className="mt-[3px]" />
         <span>
@@ -87,6 +112,59 @@ export function ModalConfirmacion({ espacio, edificio, piso, franja, onCerrar, o
         </p>
       )}
     </Modal>
+  );
+}
+
+function etiquetaMedio(m: MedioPagoResumen): string {
+  return `•••• ${m.ultimos4} · vence ${m.vencimiento} · ${m.titular}${m.principal ? ' (principal)' : ''}`;
+}
+
+interface SelectorMedioPagoProps {
+  carga: Carga<MedioPagoResumen[]>;
+  valor: number | null;
+  onChange: (id: number) => void;
+  onReintentar: () => void;
+  disabled?: boolean;
+}
+
+/** Card the booking is paid with: the customer's saved cards, the main one first. */
+function SelectorMedioPago({ carga, valor, onChange, onReintentar, disabled }: SelectorMedioPagoProps) {
+  if (carga.tipo === 'error') {
+    return (
+      <p className="alert alert-error" role="alert">
+        <Icon name="alert" size={14} className="mt-[3px]" />
+        <span>
+          {carga.mensaje}{' '}
+          <button type="button" className="link" onClick={onReintentar}>
+            Reintentar
+          </button>
+        </span>
+      </p>
+    );
+  }
+  const medios = carga.tipo === 'listo' ? carga.datos : [];
+  if (carga.tipo === 'listo' && medios.length === 0) return null;
+
+  return (
+    <div className="field">
+      <label className="label" htmlFor="reserva-medio-pago">Método de pago</label>
+      <div className="input">
+        <Icon name="card" className="input-icon" />
+        <select
+          id="reserva-medio-pago"
+          value={valor ?? ''}
+          disabled={disabled || carga.tipo === 'cargando'}
+          onChange={(e) => onChange(Number(e.target.value))}
+        >
+          {carga.tipo === 'cargando' && <option value="">Cargando tus tarjetas…</option>}
+          {[...medios].sort((a, b) => Number(b.principal) - Number(a.principal)).map((m) => (
+            <option key={m.id} value={m.id}>
+              {etiquetaMedio(m)}
+            </option>
+          ))}
+        </select>
+      </div>
+    </div>
   );
 }
 

@@ -13,8 +13,12 @@ import type {
 } from '../types/reservas';
 
 export const reservasApi = {
-  async crear(espacioId: number, inicio: string, fin: string): Promise<Reserva> {
-    return (await apiClient.post<Reserva>('/reservas', { espacioId, inicio, fin })).data;
+  /**
+   * `medioPagoId` is the card the customer picked to pay. The API does not store it yet (it ignores
+   * unknown fields), so it travels ready for when the booking keeps its payment method.
+   */
+  async crear(espacioId: number, inicio: string, fin: string, medioPagoId: number): Promise<Reserva> {
+    return (await apiClient.post<Reserva>('/reservas', { espacioId, inicio, fin, medioPagoId })).data;
   },
 
   async mias(): Promise<MisReservas> {
