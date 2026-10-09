@@ -1,9 +1,11 @@
 import { useEffect, useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { adminApi } from '../../api/reservasApi';
+import { SelectorPiso } from '../../components/admin/SelectorPiso';
 import { EmptyState, ErrorCarga } from '../../components/ui/EmptyState';
 import { Icon } from '../../components/ui/Icon';
 import { useCarga } from '../../hooks/useCarga';
+import { useEdificios } from '../../hooks/useEdificios';
 import type { Bloqueo } from '../../types/reservas';
 import { diaMes, fechaDe, horaDe } from '../../utils/fechas';
 import { ModalQuitarBloqueo } from './AgendaView';
@@ -15,13 +17,22 @@ export function BloqueosView() {
   const { estado, recargar } = useCarga(() => adminApi.bloqueos(), [], 'No pudimos cargar los bloqueos.');
   const [quitando, setQuitando] = useState<Bloqueo | null>(null);
   const [aviso, setAviso] = useState<string | null>((location.state as { aviso?: string } | null)?.aviso ?? null);
+  const edificios = useEdificios();
+  // The whole list is loaded, so company, building and floor filter it here.
+  const [empresa, setEmpresa] = useState<string | null>(null);
+  const [edificioId, setEdificioId] = useState<number | null>(null);
+  const [pisoId, setPisoId] = useState<number | null>(null);
 
   useEffect(() => {
     if (location.state) navigate(location.pathname, { replace: true, state: null });
   }, [location, navigate]);
 
   if (estado.tipo === 'error') return <ErrorCarga mensaje={estado.mensaje} onReintentar={recargar} />;
-  const grupos = estado.tipo === 'listo' ? agrupar(estado.datos) : null;
+  const empresaDe = new Map((edificios.datos ?? []).map((e) => [e.id, e.empresa]));
+  const coincide = (b: Bloqueo) =>
+    (!empresa || empresaDe.get(b.edificio.id) === empresa) && (!edificioId || b.edificio.id === edificioId) && (!pisoId || b.piso.id === pisoId);
+  const hayFiltro = !!(empresa || edificioId || pisoId);
+  const grupos = estado.tipo === 'listo' ? agrupar(estado.datos.filter(coincide)) : null;
 
   return (
     <>
@@ -45,9 +56,32 @@ export function BloqueosView() {
         </div>
       )}
 
+      {edificios.datos && (
+        <div className="card flex flex-wrap items-end gap-3 p-4">
+          <SelectorPiso
+            edificios={edificios.datos}
+            edificioId={edificioId}
+            pisoId={pisoId}
+            permitirTodos
+            onChange={() => undefined}
+            onTodos={(e, p) => {
+              setEdificioId(e);
+              setPisoId(p);
+            }}
+            empresa={empresa}
+            onEmpresa={setEmpresa}
+          />
+        </div>
+      )}
+
       <section className="card overflow-hidden">
         {!grupos && <div className="sk m-4 h-[300px]" aria-busy="true" aria-label="Cargando bloqueos" />}
-        {grupos && grupos.length === 0 && (
+        {grupos && grupos.length === 0 && hayFiltro && (
+          <EmptyState icon="filter" titulo="Ningún bloqueo coincide con los filtros">
+            Probá con otra empresa, edificio o piso.
+          </EmptyState>
+        )}
+        {grupos && grupos.length === 0 && !hayFiltro && (
           <EmptyState icon="lock" titulo="No hay bloqueos vigentes" acciones={<Link to="/admin/bloqueos/nuevo" className="btn btn-primary">Crear bloqueo</Link>}>
             Todos los espacios están en circulación.
           </EmptyState>
