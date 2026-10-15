@@ -34,6 +34,22 @@ export function MisReservasView() {
     return () => clearTimeout(t);
   }, [aviso]);
 
+  // Right after booking, the charge runs in the background: check a few times so the new booking
+  // turns Confirmada (or Cancelada) without reloading. Silent reloads, so the list does not flash.
+  const [consultasRestantes, setConsultasRestantes] = useState(aviso ? 5 : 0);
+  const hayPendientes = estado.tipo === 'listo' && estado.datos.proximas.some((r) => r.estado === 'PENDIENTE');
+  useEffect(() => {
+    if (!hayPendientes || consultasRestantes === 0) return;
+    const t = setTimeout(() => {
+      reservasApi
+        .mias()
+        .then(setDatos)
+        .catch(() => undefined)
+        .finally(() => setConsultasRestantes((n) => n - 1));
+    }, 2000);
+    return () => clearTimeout(t);
+  }, [hayPendientes, consultasRestantes, setDatos]);
+
   if (estado.tipo === 'error') return <ErrorCarga mensaje={estado.mensaje} onReintentar={recargar} />;
   const datos = estado.tipo === 'listo' ? estado.datos : null;
   const lista = datos ? (pestania === 'proximas' ? datos.proximas : datos.historial) : [];

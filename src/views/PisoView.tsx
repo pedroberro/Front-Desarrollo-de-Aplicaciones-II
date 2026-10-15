@@ -238,7 +238,7 @@ export function PisoView() {
           onCerrar={() => setConfirmando(false)}
           onCreada={(reserva) =>
             navigate('/mis-reservas', {
-              state: { aviso: `Reservaste ${reserva.espacio.codigo} (${reserva.codigo}). Queda pendiente hasta que la confirme un administrador.` },
+              state: { aviso: `Reservaste ${reserva.espacio.codigo} (${reserva.codigo}). Estamos procesando el pago: en unos segundos queda confirmada.` },
             })
           }
           onTomada={(body) => {

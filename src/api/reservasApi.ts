@@ -14,8 +14,8 @@ import type {
 
 export const reservasApi = {
   /**
-   * `medioPagoId` is the card the customer picked to pay. The API does not store it yet (it ignores
-   * unknown fields), so it travels ready for when the booking keeps its payment method.
+   * `medioPagoId` is the card the customer picked to pay. The booking comes back PENDIENTE: the API
+   * charges that card in the background and leaves it CONFIRMADA, or CANCELADA if the payment is declined.
    */
   async crear(espacioId: number, inicio: string, fin: string, medioPagoId: number): Promise<Reserva> {
     return (await apiClient.post<Reserva>('/reservas', { espacioId, inicio, fin, medioPagoId })).data;

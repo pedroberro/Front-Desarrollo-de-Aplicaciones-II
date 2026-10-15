@@ -88,7 +88,7 @@ export function DetalleEspacio({ espacio, estado }: { espacio: EspacioDetalle; e
                 · El edificio abre de lunes a viernes de <span className="num">{espacio.edificio.apertura}</span> a{' '}
                 <span className="num">{espacio.edificio.cierre}</span>.
               </li>
-              <li>· Se reserva con hasta {c.anticipacionMaximaDias} días de anticipación; nace pendiente hasta que la confirma un administrador.</li>
+              <li>· Se reserva con hasta {c.anticipacionMaximaDias} días de anticipación; nace pendiente y se confirma al acreditarse el pago.</li>
             </ul>
           </div>
         </div>

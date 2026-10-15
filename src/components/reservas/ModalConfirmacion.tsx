@@ -116,7 +116,7 @@ export function ModalConfirmacion({ espacio, edificio, piso, franja, onCerrar, o
       <p className="alert alert-info">
         <Icon name="info" size={14} className="mt-[3px]" />
         <span>
-          La reserva se crea como <b className="text-amber-700">Pendiente</b> y queda confirmada cuando la aprueba un administrador. Podés cancelarla
+          La reserva se crea como <b className="text-amber-700">Pendiente</b>, se cobra con la tarjeta elegida y queda confirmada en cuanto se acredita el pago. Si el pago se rechaza, se cancela y el horario se libera. Podés cancelarla
           desde <b>Mis reservas</b> hasta las {horaDe(franja.inicio)} de ese día.
         </span>
       </p>
