@@ -162,7 +162,7 @@ function Servicio({ servicio: s }: { servicio: ServicioEnPlano }) {
 /** Legend entries of the structural areas, shown only for the kinds the floor has. */
 const REFERENCIA_AREA: Record<Exclude<TipoArea, 'PASILLO'>, { clase: string; titulo: string; texto: string }> = {
   NUCLEO: { clase: 'area-nucleo', titulo: 'Núcleo', texto: 'Ascensores y escaleras' },
-  APOYO: { clase: 'area-apoyo', titulo: 'Apoyo', texto: 'Lockers, depósito o instalaciones' },
+  APOYO: { clase: 'area-apoyo', titulo: 'Apoyo', texto: 'Cabinas, impresión, jardín, office o depósito. No se reserva' },
   EXTERIOR: { clase: 'area-exterior', titulo: 'Terraza o patio', texto: 'Al aire libre: los espacios de al lado tienen ventanal' },
 };
 
