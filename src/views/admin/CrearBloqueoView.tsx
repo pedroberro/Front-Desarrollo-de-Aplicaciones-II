@@ -1,6 +1,7 @@
 import { useEffect, useState, type CSSProperties, type FormEvent } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { catalogoApi } from '../../api/catalogoApi';
+import axios from 'axios';
 import { getApiErrorMessage } from '../../api/apiError';
 import { adminApi } from '../../api/reservasApi';
 import { SelectorPiso } from '../../components/admin/SelectorPiso';
@@ -12,7 +13,7 @@ import { Icon, type IconName } from '../../components/ui/Icon';
 import { Segmented } from '../../components/ui/Segmented';
 import { useCarga } from '../../hooks/useCarga';
 import { pisoRecordado, useEdificios } from '../../hooks/useEdificios';
-import type { MotivoBloqueo, OcupacionCalendario } from '../../types/reservas';
+import type { MotivoBloqueo, OcupacionCalendario, ReservasAfectadasBody } from '../../types/reservas';
 import { diaMes, fechaDe, fechaHora, hhmm, horaDe, horasCada30, hoyISO, minutos, minutosDelDia, proximoHabil } from '../../utils/fechas';
 
 const MOTIVOS: { valor: MotivoBloqueo; label: string; icono: IconName }[] = [
@@ -39,6 +40,8 @@ export function CrearBloqueoView() {
   const [motivo, setMotivo] = useState<MotivoBloqueo>('MANTENIMIENTO');
   const [detalle, setDetalle] = useState('');
   const [error, setError] = useState<string | null>(null);
+  // Bookings the block would cancel: the API asks before sweeping them away.
+  const [afectadas, setAfectadas] = useState<ReservasAfectadasBody | null>(null);
   const [guardando, setGuardando] = useState(false);
   const [enviado, setEnviado] = useState(false);
 
@@ -64,8 +67,13 @@ export function CrearBloqueoView() {
 
   const crear = async (e: FormEvent) => {
     e.preventDefault();
+    await enviar(false);
+  };
+
+  const enviar = async (cancelarReservas: boolean) => {
     setEnviado(true);
     setError(null);
+    setAfectadas(null);
     if (!rangoValido || !pisoId || (alcance === 'ESPACIO' && !espacioId)) return;
     setGuardando(true);
     try {
@@ -77,12 +85,15 @@ export function CrearBloqueoView() {
         fin,
         motivo,
         detalle: detalle.trim(),
+        cancelarReservas,
       });
       navigate('/admin/bloqueos', {
         state: { aviso: creados.cantidad === 1 ? `Bloqueaste ${creados.bloqueos[0].espacio.codigo}.` : `Bloqueaste los ${creados.cantidad} espacios del piso.` },
       });
     } catch (err) {
-      setError(getApiErrorMessage(err, 'No pudimos crear el bloqueo.'));
+      const body = axios.isAxiosError(err) ? (err.response?.data as ReservasAfectadasBody | undefined) : undefined;
+      if (body?.code === 'RESERVAS_AFECTADAS') setAfectadas(body);
+      else setError(getApiErrorMessage(err, 'No pudimos crear el bloqueo.'));
       setGuardando(false);
     }
   };
@@ -195,6 +206,29 @@ export function CrearBloqueoView() {
                 <Icon name="alert" size={14} className="mt-[3px]" />
                 <span>{error}</span>
               </p>
+            )}
+            {afectadas && (
+              <div className="alert alert-warn flex-col items-stretch" role="alert">
+                <span className="flex gap-2">
+                  <Icon name="alert" size={14} className="mt-[3px]" />
+                  <span>{afectadas.message}</span>
+                </span>
+                <ul className="t-xs flex flex-col gap-1 pl-6">
+                  {afectadas.reservas.map((r) => (
+                    <li key={r.id}>
+                      <b className="mono">{r.codigo}</b> · {r.espacio} · {r.cliente} · {diaMes(fechaDe(r.inicio))} {horaDe(r.inicio)}–{horaDe(r.fin)}
+                    </li>
+                  ))}
+                </ul>
+                <span className="flex justify-end gap-2">
+                  <button type="button" className="btn btn-secondary btn-sm" onClick={() => setAfectadas(null)} disabled={guardando}>
+                    Revisar el horario
+                  </button>
+                  <button type="button" className="btn btn-danger btn-sm" onClick={() => enviar(true)} disabled={guardando}>
+                    <Icon name="ban" size={14} /> Bloquear y cancelar {afectadas.reservas.length === 1 ? 'la reserva' : `las ${afectadas.reservas.length} reservas`}
+                  </button>
+                </span>
+              </div>
             )}
           </div>
           <div className="modal-ft rounded-b-lg">

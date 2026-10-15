@@ -1,6 +1,7 @@
 import type { EspacioDetalle, EstadoEspacio } from '../../types/reservas';
 import { ICONO_SERVICIO, iconoEquipamiento } from '../../utils/catalogo';
 import { EstadoEspacioBadge } from '../ui/EstadoBadge';
+import { lineasPolitica, pesos } from '../../utils/cobro';
 import { Icon } from '../ui/Icon';
 
 /** Screen 7, under the plan: everything about the space the customer is about to book. */
@@ -83,7 +84,8 @@ export function DetalleEspacio({ espacio, estado }: { espacio: EspacioDetalle; e
             <h3 className="t-sm mb-2 font-semibold">Condiciones de uso</h3>
             <ul className="t-xs muted grid gap-x-6 gap-y-1.5 sm:grid-cols-2">
               <li>· Franja mínima de {c.minimaMinutos} min, máxima de {c.maximaMinutos / 60} h, en bloques de {c.pasoMinutos} min.</li>
-              <li>· Se puede cancelar hasta que empieza, desde Mis reservas.</li>
+              <li>· Cuesta {pesos(espacio.precioHora)} la hora y se cobra por minuto al reservar.</li>
+              {lineasPolitica(c).map((l) => <li key={l}>· {l}</li>)}
               <li>
                 · El edificio abre de lunes a viernes de <span className="num">{espacio.edificio.apertura}</span> a{' '}
                 <span className="num">{espacio.edificio.cierre}</span>.

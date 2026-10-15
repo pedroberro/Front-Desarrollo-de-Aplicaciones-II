@@ -6,7 +6,8 @@ import { reservasApi } from '../../api/reservasApi';
 import { usuariosApi } from '../../api/usuariosApi';
 import { useCarga, type Carga } from '../../hooks/useCarga';
 import type { MedioPagoResumen } from '../../types';
-import type { EspacioEnPlano, Franja, FranjaTomadaBody, Reserva } from '../../types/reservas';
+import type { Condiciones, EspacioEnPlano, Franja, FranjaTomadaBody, Reserva } from '../../types/reservas';
+import { lineasPolitica, montoEstimado, pesos } from '../../utils/cobro';
 import { duracion, fechaDe, fechaLarga, horaDe, minutosEntre, rangoHorario } from '../../utils/fechas';
 import { Icon } from '../ui/Icon';
 import { Modal } from '../ui/Modal';
@@ -16,6 +17,8 @@ interface ModalConfirmacionProps {
   edificio: string;
   piso: string;
   franja: Franja;
+  /** Booking rules and cancellation policy, shown before confirming. */
+  condiciones: Condiciones;
   onCerrar: () => void;
   onCreada: (reserva: Reserva) => void;
   /** The slot was taken while confirming (409): hand the nearby alternatives to the caller. */
@@ -23,7 +26,7 @@ interface ModalConfirmacionProps {
 }
 
 /** Screen 8. The server validates the slot again on confirm: what was free a minute ago may not be now. */
-export function ModalConfirmacion({ espacio, edificio, piso, franja, onCerrar, onCreada, onTomada }: ModalConfirmacionProps) {
+export function ModalConfirmacion({ espacio, edificio, piso, franja, condiciones, onCerrar, onCreada, onTomada }: ModalConfirmacionProps) {
   const [enviando, setEnviando] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const medios = useCarga(() => usuariosApi.listarMediosPago(), [], 'No pudimos cargar tus métodos de pago.');
@@ -61,6 +64,7 @@ export function ModalConfirmacion({ espacio, edificio, piso, franja, onCerrar, o
     ['Día', fechaLarga(fechaDe(franja.inicio))],
     ['Horario', rangoHorario(franja.inicio, franja.fin)],
     ['Duración', duracion(minutosEntre(franja.inicio, franja.fin))],
+    ['Total', `${pesos(montoEstimado(espacio.precioHora, minutosEntre(franja.inicio, franja.fin)))} · ${pesos(espacio.precioHora)} la hora`],
   ];
 
   return (
@@ -120,6 +124,12 @@ export function ModalConfirmacion({ espacio, edificio, piso, franja, onCerrar, o
           desde <b>Mis reservas</b> hasta las {horaDe(franja.inicio)} de ese día.
         </span>
       </p>
+      <div className="rounded-md border border-slate-200 p-3">
+        <p className="t-sm font-semibold">Si después cancelás</p>
+        <ul className="t-xs muted mt-1 flex flex-col gap-1">
+          {lineasPolitica(condiciones).map((l) => <li key={l}>· {l}</li>)}
+        </ul>
+      </div>
       {error && (
         <p className="alert alert-error" role="alert">
           <Icon name="alert" size={14} className="mt-[3px]" />

@@ -100,6 +100,8 @@ export interface EspacioEnPlano {
   ventana: boolean;
   /** Side of the window: Norte, Sur, Este, Oeste; Interior when it has none. */
   orientacion: string;
+  /** Pesos per hour; a booking is charged per minute. */
+  precioHora: number;
   equipamiento: string[];
   posicion: Posicion;
   estado: EstadoEspacio;
@@ -150,6 +152,7 @@ export interface PlanoPiso {
   areas: AreaEnPlano[];
   resumen: ResumenPlano;
   otrosPisos: { id: number; nombre: string; libres: number }[];
+  condiciones: Condiciones;
   sugerencia: Franja | null;
 }
 
@@ -158,6 +161,12 @@ export interface Condiciones {
   minimaMinutos: number;
   maximaMinutos: number;
   anticipacionMaximaDias: number;
+  /** Cancellation policy: full refund until this many hours before the start... */
+  cancelacionSinCargoHoras: number;
+  /** ...a partial one until this many... */
+  cancelacionConRetencionHoras: number;
+  /** ...of this percentage; nothing after that. */
+  reintegroParcialPorcentaje: number;
 }
 
 export interface EspacioDetalle {
@@ -179,6 +188,7 @@ export interface EspacioDetalle {
   empresa: Ref;
   serviciosCercanos: { tipo: TipoServicio; nombre: string; metros: number }[];
   condiciones: Condiciones;
+  precioHora: number;
 }
 
 export interface OcupacionCalendario {
@@ -249,6 +259,23 @@ export interface Reserva {
   cancelable: boolean;
   creadaEl: string;
   cambios: Cambio[] | null;
+  /** The charge; null while not charged (or charging is off). */
+  pago: Pago | null;
+  /** What the customer gets back cancelling now; only on their own cancelable bookings. */
+  reintegroSiCancela: ReintegroSiCancela | null;
+}
+
+export interface Pago {
+  monto: number;
+  estado: 'APROBADO' | 'RECHAZADO';
+  tarjeta: string | null;
+  reintegrado: number | null;
+}
+
+/** `monto` is null when nothing was charged yet. */
+export interface ReintegroSiCancela {
+  porcentaje: number;
+  monto: number | null;
 }
 
 export interface MisReservas {
@@ -348,4 +375,13 @@ export interface CrearBloqueoRequest {
   fin: string;
   motivo: MotivoBloqueo;
   detalle: string;
+  /** Cancel the bookings in the way (full refund, a mail each); without it they stop the block. */
+  cancelarReservas?: boolean;
+}
+
+/** 409 of a block that falls on bookings. */
+export interface ReservasAfectadasBody {
+  message: string;
+  code: 'RESERVAS_AFECTADAS';
+  reservas: { id: number; codigo: string; espacio: string; cliente: string; inicio: string; fin: string }[];
 }

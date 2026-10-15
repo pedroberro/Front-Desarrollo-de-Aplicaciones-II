@@ -238,6 +238,7 @@ export function PisoView() {
           edificio={datos.edificio.nombre}
           piso={datos.piso.nombre}
           franja={seleccion}
+          condiciones={datos.condiciones}
           onCerrar={() => setConfirmando(false)}
           onCreada={(reserva) =>
             navigate('/mis-reservas', {

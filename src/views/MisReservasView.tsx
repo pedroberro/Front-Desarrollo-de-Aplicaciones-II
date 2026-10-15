@@ -8,7 +8,8 @@ import { Icon } from '../components/ui/Icon';
 import { Modal } from '../components/ui/Modal';
 import { useAuth } from '../hooks/useAuth';
 import { useCarga } from '../hooks/useCarga';
-import type { Reserva } from '../types/reservas';
+import type { Pago, Reserva } from '../types/reservas';
+import { pesos, textoReintegro } from '../utils/cobro';
 import { duracion, fechaDe, fechaLarga, horaDe, partesFecha, rangoHorario } from '../utils/fechas';
 
 type Pestania = 'proximas' | 'historial';
@@ -237,6 +238,12 @@ function ModalCancelar({ reserva, onCerrar, onCancelada }: { reserva: Reserva; o
         {reserva.espacio.codigo} · {reserva.edificio.nombre}, {reserva.piso.nombre} · {fechaLarga(fechaDe(reserva.inicio), false)},{' '}
         {rangoHorario(reserva.inicio, reserva.fin)}. La franja queda libre para otras personas.
       </p>
+      {reserva.reintegroSiCancela && (
+        <p className={`alert ${reserva.reintegroSiCancela.porcentaje === 0 && reserva.reintegroSiCancela.monto !== null ? 'alert-warn' : 'alert-info'}`}>
+          <Icon name="card" size={14} className="mt-[3px]" />
+          <span>{textoReintegro(reserva.reintegroSiCancela)}</span>
+        </p>
+      )}
       {error && (
         <p className="alert alert-error" role="alert">
           <Icon name="alert" size={14} className="mt-[3px]" />
@@ -276,6 +283,7 @@ export function ModalDetalleReserva({ id, onCerrar }: { id: number; onCerrar: ()
               ['Horario', `${rangoHorario(r.inicio, r.fin)} (${duracion(r.duracionMinutos)})`],
               ['A nombre de', r.cliente.nombre],
               ['Creada', `${fechaLarga(fechaDe(r.creadaEl), false)}, ${horaDe(r.creadaEl)}${r.creadaPorAdmin ? ' · por un administrador' : ''}`],
+              ...(r.pago ? [['Pago', textoPago(r.pago)]] : []),
             ].map(([k, v]) => (
               <div key={k}>
                 <dt className="t-xs muted">{k}</dt>
@@ -307,4 +315,11 @@ export function ModalDetalleReserva({ id, onCerrar }: { id: number; onCerrar: ()
       )}
     </Modal>
   );
+}
+
+function textoPago(p: Pago): string {
+  if (p.estado === 'RECHAZADO') return `Rechazado (${pesos(p.monto)})`;
+  const tarjeta = p.tarjeta ? ` con •••• ${p.tarjeta}` : '';
+  const reintegro = p.reintegrado === null ? '' : p.reintegrado > 0 ? ` · reintegrados ${pesos(p.reintegrado)}` : ' · sin reintegro';
+  return `${pesos(p.monto)}${tarjeta}${reintegro}`;
 }
