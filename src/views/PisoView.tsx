@@ -5,7 +5,7 @@ import { DetalleEspacio } from '../components/espacio/DetalleEspacio';
 import { PanelEspacio } from '../components/espacio/PanelEspacio';
 import { FiltrosFranja, type FiltroUI } from '../components/plano/FiltrosFranja';
 import { ListaEspacios } from '../components/plano/ListaEspacios';
-import { PlanoPiso, Referencias } from '../components/plano/PlanoPiso';
+import { DisposicionChip, PlanoPiso, Referencias } from '../components/plano/PlanoPiso';
 import { FranjaTomadaModal, ModalConfirmacion } from '../components/reservas/ModalConfirmacion';
 import { Breadcrumb } from '../components/ui/Breadcrumb';
 import { EmptyState, ErrorCarga } from '../components/ui/EmptyState';
@@ -106,7 +106,10 @@ export function PisoView() {
               { label: datos?.piso.nombre ?? '…' },
             ]}
           />
-          <h1 className="t-2xl font-semibold">{titulo}</h1>
+          <div className="flex flex-wrap items-center gap-2">
+            <h1 className="t-2xl font-semibold">{titulo}</h1>
+            {datos && <DisposicionChip disposicion={datos.piso.disposicion} />}
+          </div>
         </div>
         <Segmented
           label="Vista"
@@ -221,7 +224,7 @@ export function PisoView() {
             ) : (
               <>
                 {sinLibres && <OtrosPisos plano={datos} query={f.query.toString()} />}
-                <Referencias />
+                <Referencias areas={datos.areas} />
                 <ComodidadesCard plano={datos} />
               </>
             )}

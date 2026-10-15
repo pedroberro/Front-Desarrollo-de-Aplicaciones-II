@@ -3,6 +3,8 @@
 
 export type TipoEspacio = 'CUBICULO' | 'SALA_REUNIONES' | 'SALA_PRESENTACIONES' | 'SALA_CONFERENCIAS';
 export type TipoServicio = 'COCINA' | 'SALA_ESTAR' | 'BANO';
+/** Structural parts of a floor plan: drawn, never booked. */
+export type TipoArea = 'PASILLO' | 'NUCLEO' | 'APOYO' | 'EXTERIOR';
 export type EstadoEspacio = 'LIBRE' | 'OCUPADO' | 'BLOQUEADO';
 export type EstadoReserva = 'PENDIENTE' | 'CONFIRMADA' | 'CANCELADA' | 'FINALIZADA';
 export type MotivoBloqueo = 'MANTENIMIENTO' | 'LIMPIEZA' | 'EVENTO' | 'OTRO';
@@ -61,6 +63,8 @@ export interface PisoResumen {
   salas: number;
   comodidades: Comodidad[];
   libres: number;
+  /** Label of the floor's layout, e.g. "Núcleo central". */
+  disposicion: string;
 }
 
 export interface EdificioDetalle {
@@ -94,6 +98,8 @@ export interface EspacioEnPlano {
   tipoEtiqueta: string;
   capacidad: number;
   ventana: boolean;
+  /** Side of the window: Norte, Sur, Este, Oeste; Interior when it has none. */
+  orientacion: string;
   equipamiento: string[];
   posicion: Posicion;
   estado: EstadoEspacio;
@@ -106,6 +112,14 @@ export interface ServicioEnPlano {
   id: number;
   tipo: TipoServicio;
   nombre: string;
+  posicion: Posicion;
+}
+
+/** Corridor, elevator core, support area (lockers, building services) or terrace. */
+export interface AreaEnPlano {
+  id: number;
+  tipo: TipoArea;
+  etiqueta: string;
   posicion: Posicion;
 }
 
@@ -122,7 +136,9 @@ export interface PlanoPiso {
     numero: number;
     nombre: string;
     columnas: number;
-    filaPasillo: number | null;
+    filas: number;
+    /** Label of the layout. The plan is drawn from the areas, never from this. */
+    disposicion: string;
     ventanas: string[];
     comodidades: Comodidad[];
   };
@@ -131,6 +147,7 @@ export interface PlanoPiso {
   franja: Franja;
   espacios: EspacioEnPlano[];
   servicios: ServicioEnPlano[];
+  areas: AreaEnPlano[];
   resumen: ResumenPlano;
   otrosPisos: { id: number; nombre: string; libres: number }[];
   sugerencia: Franja | null;

@@ -1,9 +1,10 @@
 import type { CSSProperties } from 'react';
-import type { EspacioEnPlano, PlanoPiso as Plano, ServicioEnPlano } from '../../types/reservas';
+import type { AreaEnPlano, EspacioEnPlano, PlanoPiso as Plano, ServicioEnPlano, TipoArea } from '../../types/reservas';
 import { ICONO_SERVICIO } from '../../utils/catalogo';
 import { cuandoLibre, fechaDe, horaDe, rangoHorario } from '../../utils/fechas';
 import { EstadoEspacioBadge } from '../ui/EstadoBadge';
-import { Icon } from '../ui/Icon';
+import { Icon, type IconName } from '../ui/Icon';
+import { abreArriba, bordes, esVertical, plantillaFilas, ventanaDe } from './geometria';
 
 interface PlanoPisoProps {
   plano: Plano;
@@ -20,43 +21,34 @@ function area({ x, y, ancho, alto }: { x: number; y: number; ancho: number; alto
   return { gridColumn: `${x + 1} / span ${ancho}`, gridRow: `${y + 1} / span ${alto}` };
 }
 
+/** How each kind of structural area is drawn. A new kind only needs an entry here. */
+const AREA: Record<TipoArea, { clase: string; icono?: IconName; texto: (a: AreaEnPlano) => string; hastaElMuro: boolean }> = {
+  PASILLO: { clase: 'pasillo', texto: () => 'PASILLO', hastaElMuro: true },
+  NUCLEO: { clase: 'area-nucleo', icono: 'layers', texto: (a) => a.etiqueta, hastaElMuro: false },
+  APOYO: { clase: 'area-apoyo', texto: (a) => a.etiqueta, hastaElMuro: false },
+  EXTERIOR: { clase: 'area-exterior', icono: 'sun', texto: (a) => a.etiqueta.toUpperCase(), hastaElMuro: true },
+};
+
 /**
- * The floor drawn on a grid: walls, windows, corridor, bookable spaces with their state for the
- * chosen slot, and the floor services, which are shown but never booked.
+ * The floor drawn on a grid: walls, corridors and the rest of the structure, bookable spaces with
+ * their state for the chosen slot and their windows, and the floor services, shown but never
+ * booked. Every layout is just rectangles here: nothing below depends on which one it is.
  */
 export function PlanoPiso({ plano, seleccionadoId, onSeleccionar, modo }: PlanoPisoProps) {
-  const { piso, espacios, servicios } = plano;
-  const filas = Math.max(0, ...espacios.map((e) => e.posicion.y + e.posicion.alto), ...servicios.map((s) => s.posicion.y + s.posicion.alto));
-  const plantillaFilas = Array.from({ length: filas }, (_, i) => (i === piso.filaPasillo ? '58px' : 'auto')).join(' ');
-
-  // Window marks follow the spaces that actually have a window on each wall.
-  const norte = espacios.filter((e) => e.ventana && e.posicion.y === 0);
-  const inicioNorte = Math.min(...norte.map((e) => e.posicion.x));
-  const finNorte = Math.max(...norte.map((e) => e.posicion.x + e.posicion.ancho));
-  const ancho = (desde: number, hasta: number) => `calc((100% - 44px) * ${(hasta - desde) / piso.columnas})`;
+  const { piso, espacios, servicios, areas } = plano;
 
   return (
     <div className="plano-wrap">
-      <div className="plano" role="group" aria-label={`Plano del ${piso.nombre.toLowerCase()}`}>
-        {piso.ventanas.includes('NORTE') && norte.length > 0 && (
-          <span className="win-n" style={{ left: `calc(22px + (100% - 44px) * ${inicioNorte / piso.columnas})`, width: ancho(inicioNorte, finNorte) }} aria-hidden="true" />
-        )}
-        {piso.ventanas.includes('OESTE') && <span className="win-w" style={{ top: '6%', height: '62%' }} aria-hidden="true" />}
-        {piso.ventanas.includes('ESTE') && <span className="win-e" style={{ top: '6%', height: '62%' }} aria-hidden="true" />}
-
-        <div className="plano-grid" style={{ gridTemplateColumns: `repeat(${piso.columnas}, minmax(0, 1fr))`, gridTemplateRows: plantillaFilas }}>
-          {piso.filaPasillo !== null && (
-            <div className="pasillo" style={{ gridRow: piso.filaPasillo + 1 }} aria-hidden="true">
-              PASILLO
-            </div>
-          )}
+      <div className="plano" role="group" aria-label={`Plano del ${piso.nombre.toLowerCase()}, ${piso.disposicion.toLowerCase()}`}>
+        <div className="plano-grid" style={{ gridTemplateColumns: `repeat(${piso.columnas}, minmax(0, 1fr))`, gridTemplateRows: plantillaFilas(plano) }}>
+          {areas.map((a) => <Area key={a.id} area={a} piso={piso} />)}
           {espacios.map((e) => (
             <Espacio
               key={e.id}
               espacio={e}
+              piso={piso}
               seleccionado={e.id === seleccionadoId}
               abrible={modo === 'admin' || (e.estado === 'LIBRE' && e.cumpleFiltros)}
-              arriba={piso.filaPasillo !== null && e.posicion.y > piso.filaPasillo}
               referencia={plano.franja.inicio}
               modo={modo}
               onClick={() => onSeleccionar(e)}
@@ -69,18 +61,36 @@ export function PlanoPiso({ plano, seleccionadoId, onSeleccionar, modo }: PlanoP
   );
 }
 
+function Area({ area: a, piso }: { area: AreaEnPlano; piso: Plano['piso'] }) {
+  const forma = AREA[a.tipo];
+  const estilo: CSSProperties = { ...area(a.posicion) };
+  if (forma.hastaElMuro) {
+    // Corridors and terraces run up to the outer wall, across the plan's padding.
+    const b = bordes(a.posicion, piso);
+    Object.assign(estilo, { marginTop: b.n ? -22 : 0, marginBottom: b.s ? -22 : 0, marginLeft: b.o ? -22 : 0, marginRight: b.e ? -22 : 0 });
+  }
+  return (
+    <div className={`${forma.clase} ${esVertical(a.posicion) ? `${forma.clase}-v` : ''}`} style={estilo}>
+      {forma.icono && <Icon name={forma.icono} size={16} />}
+      <span>{forma.texto(a)}</span>
+    </div>
+  );
+}
+
 interface EspacioProps {
   espacio: EspacioEnPlano;
+  piso: Plano['piso'];
   seleccionado: boolean;
   abrible: boolean;
-  arriba: boolean;
   referencia: string;
   modo: 'cliente' | 'admin';
   onClick: () => void;
 }
 
-function Espacio({ espacio: e, seleccionado, abrible, arriba, referencia, modo, onClick }: EspacioProps) {
+function Espacio({ espacio: e, piso, seleccionado, abrible, referencia, modo, onClick }: EspacioProps) {
   const sala = e.tipo !== 'CUBICULO';
+  const arriba = abreArriba(e.posicion, piso);
+  const ventana = ventanaDe(e, piso);
   const clase = seleccionado ? 'tile-sel' : ESTADO_CLASE[e.estado];
   const texto = seleccionado
     ? 'Seleccionado'
@@ -90,6 +100,7 @@ function Espacio({ espacio: e, seleccionado, abrible, arriba, referencia, modo, 
 
   return (
     <div className="tile-cell" style={area(e.posicion)}>
+      {ventana && <span className={`ventana ventana-${ventana.lado} ${ventana.enMuro ? 'ventana-muro' : ''}`} aria-hidden="true" />}
       <button
         type="button"
         className={`tile h-full w-full ${sala ? 'tile-sala' : ''} ${clase} ${e.cumpleFiltros ? '' : 'tile-dim'}`}
@@ -148,13 +159,23 @@ function Servicio({ servicio: s }: { servicio: ServicioEnPlano }) {
   );
 }
 
-export function Referencias() {
+/** Legend entries of the structural areas, shown only for the kinds the floor has. */
+const REFERENCIA_AREA: Record<Exclude<TipoArea, 'PASILLO'>, { clase: string; titulo: string; texto: string }> = {
+  NUCLEO: { clase: 'area-nucleo', titulo: 'Núcleo', texto: 'Ascensores y escaleras' },
+  APOYO: { clase: 'area-apoyo', titulo: 'Apoyo', texto: 'Lockers, depósito o instalaciones' },
+  EXTERIOR: { clase: 'area-exterior', titulo: 'Terraza o patio', texto: 'Al aire libre: los espacios de al lado tienen ventanal' },
+};
+
+export function Referencias({ areas = [] }: { areas?: AreaEnPlano[] }) {
+  const presentes = new Set(areas.map((a) => a.tipo));
   const items = [
     { clase: 'tile-libre', titulo: 'Libre', texto: 'Se puede reservar en esta franja' },
     { clase: 'tile-ocupado', titulo: 'Ocupado', texto: 'Ya reservado por otra persona' },
     { clase: 'tile-bloqueado', titulo: 'Bloqueado', texto: 'Mantenimiento, limpieza o evento' },
     { clase: 'tile-sel', titulo: 'Seleccionado', texto: 'Lo que estás por reservar' },
     { clase: 'tile-servicio', titulo: 'Servicio del piso', texto: 'Baño, cocina, sala de estar. No se reserva' },
+    { clase: 'swatch-ventana', titulo: 'Ventana', texto: 'Marca azul sobre el muro o hacia la terraza' },
+    ...(Object.keys(REFERENCIA_AREA) as (keyof typeof REFERENCIA_AREA)[]).filter((t) => presentes.has(t)).map((t) => REFERENCIA_AREA[t]),
   ];
   return (
     <div className="card">
@@ -165,7 +186,7 @@ export function Referencias() {
       <ul className="card-bd flex flex-col gap-3.5">
         {items.map((i) => (
           <li key={i.titulo} className="flex items-start gap-3">
-            <span className={`swatch tile ${i.clase}`} aria-hidden="true">
+            <span className={`swatch ${i.clase.startsWith('tile') ? 'tile' : ''} ${i.clase}`} aria-hidden="true">
               {i.clase === 'tile-sel' ? <Icon name="check" size={12} className="absolute top-0.5 right-0.5 text-[color:var(--on-accent)]" /> : <i className="tile-glyph" />}
             </span>
             <span className="flex flex-col">
@@ -180,5 +201,15 @@ export function Referencias() {
         Cada estado se distingue por color, trama y símbolo, para que se lea sin depender del color.
       </p>
     </div>
+  );
+}
+
+/** Layout of the floor ("Núcleo central"), next to its name and in the list of floors. */
+export function DisposicionChip({ disposicion }: { disposicion: string }) {
+  return (
+    <span className="chip" title="Disposición de la planta">
+      <Icon name="layers" size={14} />
+      {disposicion}
+    </span>
   );
 }

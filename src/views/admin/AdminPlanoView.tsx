@@ -8,7 +8,7 @@ import { CalendarioSemanal, haySuperposicion } from '../../components/espacio/Ca
 import { CabeceraEspacio, diasHabiles, NavegadorSemana } from '../../components/espacio/PanelEspacio';
 import { FiltrosFranja } from '../../components/plano/FiltrosFranja';
 import { ListaEspacios } from '../../components/plano/ListaEspacios';
-import { PlanoPiso, Referencias } from '../../components/plano/PlanoPiso';
+import { DisposicionChip, PlanoPiso, Referencias } from '../../components/plano/PlanoPiso';
 import { Breadcrumb } from '../../components/ui/Breadcrumb';
 import { ErrorCarga } from '../../components/ui/EmptyState';
 import { EstadoReservaBadge } from '../../components/ui/EstadoBadge';
@@ -91,7 +91,10 @@ export function AdminPlanoView() {
               { label: datos?.piso.nombre ?? '…' },
             ]}
           />
-          <h1 className="t-2xl font-semibold">{datos ? `Plano del ${datos.piso.nombre.toLowerCase()} · vista administrador` : 'Cargando…'}</h1>
+          <div className="flex flex-wrap items-center gap-2">
+            <h1 className="t-2xl font-semibold">{datos ? `Plano del ${datos.piso.nombre.toLowerCase()} · vista administrador` : 'Cargando…'}</h1>
+            {datos && <DisposicionChip disposicion={datos.piso.disposicion} />}
+          </div>
         </div>
         <Segmented
           label="Vista"
@@ -227,7 +230,7 @@ export function AdminPlanoView() {
                 onCerrar={() => f.setEspacio(null)}
               />
             ) : (
-              <Referencias />
+              <Referencias areas={datos.areas} />
             )}
           </div>
         </div>

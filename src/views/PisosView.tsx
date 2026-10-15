@@ -1,6 +1,7 @@
 import { useNavigate, useParams } from 'react-router-dom';
 import { catalogoApi } from '../api/catalogoApi';
 import { Ilustracion } from '../components/catalogo/Ilustracion';
+import { DisposicionChip } from '../components/plano/PlanoPiso';
 import { Breadcrumb } from '../components/ui/Breadcrumb';
 import { ErrorCarga } from '../components/ui/EmptyState';
 import { Icon } from '../components/ui/Icon';
@@ -90,6 +91,7 @@ export function PisosView() {
                       </span>
                     </span>
                     <span className="flex flex-wrap gap-1.5">
+                      <DisposicionChip disposicion={piso.disposicion} />
                       {piso.comodidades.map((c) => (
                         <span key={c.tipo} className="chip">
                           <Icon name={ICONO_COMODIDAD[c.tipo]} size={14} />

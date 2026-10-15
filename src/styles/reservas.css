@@ -89,10 +89,29 @@
   .plano-wrap { overflow-x: auto; padding: 4px; }
   .plano { position: relative; border: 6px solid var(--color-slate-700); border-radius: 3px; padding: 22px; background: #fff; min-width: 760px; }
   .plano-grid { display: grid; gap: 10px; }
-  .win-n { position: absolute; top: -6px; height: 6px; background: #38bdf8; }
-  .win-w { position: absolute; left: -6px; width: 6px; background: #38bdf8; }
-  .win-e { position: absolute; right: -6px; width: 6px; background: #38bdf8; }
-  .pasillo { grid-column: 1 / -1; height: 58px; display: flex; align-items: center; justify-content: center; font: 600 11px/1 var(--font-mono); letter-spacing: 0.7em; color: var(--color-slate-500); border-top: 1.5px dashed var(--color-slate-300); border-bottom: 1.5px dashed var(--color-slate-300); background: var(--color-slate-50); margin: 0 -22px; }
+  .pasillo { min-height: 58px; display: flex; align-items: center; justify-content: center; font: 600 11px/1 var(--font-mono); letter-spacing: 0.7em; color: var(--color-slate-500); border-top: 1.5px dashed var(--color-slate-300); border-bottom: 1.5px dashed var(--color-slate-300); background: var(--color-slate-50); }
+  .pasillo-v { min-height: 0; writing-mode: vertical-rl; border-top: 0; border-bottom: 0; border-left: 1.5px dashed var(--color-slate-300); border-right: 1.5px dashed var(--color-slate-300); }
+
+  /* Structural areas: drawn like the corridor, never booked */
+  .area-nucleo, .area-apoyo, .area-exterior { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; min-height: 56px; padding: 6px; border-radius: 4px; text-align: center; font: 600 10px/1.2 var(--font-mono); letter-spacing: 0.12em; text-transform: uppercase; }
+  .area-nucleo { background: var(--color-slate-700); color: var(--color-slate-100); border: 1.5px solid var(--color-slate-800); }
+  .area-apoyo { background: var(--color-slate-50); color: var(--color-slate-500); border: 1.5px dotted var(--color-slate-300); letter-spacing: 0.06em; font-weight: 500; }
+  .area-exterior { background-color: #ecfdf5; background-image: radial-gradient(rgba(5, 150, 105, 0.28) 1px, transparent 1.3px); background-size: 9px 9px; color: #047857; border: 1.5px dashed #6ee7b7; letter-spacing: 0.5em; font-size: 11px; }
+  .area-nucleo-v span, .area-apoyo-v span { writing-mode: vertical-rl; }
+
+  /* Window of a space: on the outer wall, or on the edge that faces a terrace */
+  .ventana { position: absolute; background: #38bdf8; pointer-events: none; z-index: 1; }
+  .ventana-n, .ventana-s { left: 0; right: 0; height: 6px; }
+  .ventana-e, .ventana-o { top: 0; bottom: 0; width: 6px; }
+  .ventana-n { top: -8px; }
+  .ventana-s { bottom: -8px; }
+  .ventana-e { right: -8px; }
+  .ventana-o { left: -8px; }
+  .ventana-muro.ventana-n { top: -28px; }
+  .ventana-muro.ventana-s { bottom: -28px; }
+  .ventana-muro.ventana-e { right: -28px; }
+  .ventana-muro.ventana-o { left: -28px; }
+  .swatch-ventana { border-color: var(--color-slate-300); background: linear-gradient(#38bdf8, #38bdf8) top / 100% 6px no-repeat, #fff; }
 
   .tile { position: relative; min-height: 84px; border-radius: 4px; border: 1.5px solid; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; padding: 8px 6px; text-align: center; font-family: var(--font-sans); background-clip: padding-box; transition: transform 0.12s, box-shadow 0.12s, opacity 0.12s; }
   .tile-sala { min-height: 112px; }
@@ -211,7 +230,10 @@
 
   /* Dark theme for the booking screens */
   .dark .tabs, .dark .tbl th, .dark .tbl td, .dark .floor-row, .dark .floor-num, .dark .agenda-head, .dark .cover, .dark .date-box { border-color: var(--color-slate-700); }
-  .dark .tbl th, .dark .floor-num, .dark .pasillo { background: var(--color-slate-800); }
+  .dark .tbl th, .dark .floor-num, .dark .pasillo, .dark .area-apoyo { background: var(--color-slate-800); }
+  .dark .area-nucleo { background: var(--color-slate-600); border-color: var(--color-slate-500); }
+  .dark .area-exterior { background-color: rgba(6, 78, 59, 0.45); color: #6ee7b7; border-color: #047857; }
+  .dark .swatch-ventana { background: linear-gradient(#38bdf8, #38bdf8) top / 100% 6px no-repeat, var(--color-slate-900); }
   .dark .floor-row, .dark .agenda-head, .dark .plano, .dark .combo, .dark .toggle, .dark .textarea, .dark .monogram, .dark .cover-tag { background: var(--color-slate-900); color: var(--color-slate-100); border-color: var(--color-slate-700); }
   .dark .seg, .dark .chip, .dark .tab-count { background: var(--color-slate-800); color: var(--color-slate-300); }
   .dark .seg-i { color: var(--color-slate-300); }
