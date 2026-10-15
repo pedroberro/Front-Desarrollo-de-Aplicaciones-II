@@ -150,8 +150,7 @@ export function AdminPlanoView() {
                 <p className="t-xs muted mt-3 flex items-center gap-2">
                   <Icon name="info" size={14} />
                   <span>
-                    El admin puede hacer clic en cualquier espacio, también en los <b>ocupados</b> y los <b>bloqueados</b>. El cliente, en cambio, solo abre
-                    los libres.
+                    Hacé clic en cualquier espacio, también en los <b>ocupados</b> y los <b>bloqueados</b>, para ver y editar sus reservas.
                   </span>
                 </p>
               </div>
@@ -193,7 +192,6 @@ export function AdminPlanoView() {
                       </span>
                     </div>
                   ))}
-                  <p className="t-xs muted">Editar abre la reserva en el panel de la derecha. El tacho pide confirmación antes de borrar.</p>
                 </div>
               </section>
             )}

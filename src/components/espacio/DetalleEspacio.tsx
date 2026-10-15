@@ -35,7 +35,7 @@ export function DetalleEspacio({ espacio, estado }: { espacio: EspacioDetalle; e
 
       <div className="grid gap-6 p-4 lg:grid-cols-[minmax(0,420px)_1fr]">
         <div className="flex flex-col gap-2">
-          <Foto sala={sala} ventana={espacio.ventana} etiqueta="foto 1 de 4 del espacio" grande />
+          <Foto sala={sala} ventana={espacio.ventana} grande />
           <div className="grid grid-cols-3 gap-2">
             <Foto sala={sala} ventana={false} />
             <Foto sala={false} ventana />
@@ -77,7 +77,7 @@ export function DetalleEspacio({ espacio, estado }: { espacio: EspacioDetalle; e
                 </span>
               ))}
             </div>
-            <p className="t-xs muted">Los servicios se ven en el plano con trama gris y no se reservan.</p>
+            <p className="t-xs muted">Los servicios del piso son de uso libre y no se reservan.</p>
           </div>
 
           <div className="rounded-lg border border-slate-200 bg-slate-50 p-4">
@@ -90,7 +90,7 @@ export function DetalleEspacio({ espacio, estado }: { espacio: EspacioDetalle; e
                 · El edificio abre de lunes a viernes de <span className="num">{espacio.edificio.apertura}</span> a{' '}
                 <span className="num">{espacio.edificio.cierre}</span>.
               </li>
-              <li>· Se reserva con hasta {c.anticipacionMaximaDias} días de anticipación; nace pendiente y se confirma al acreditarse el pago.</li>
+              <li>· Se reserva con hasta {c.anticipacionMaximaDias} días de anticipación y se confirma en cuanto se acredita el pago.</li>
             </ul>
           </div>
         </div>
@@ -100,7 +100,7 @@ export function DetalleEspacio({ espacio, estado }: { espacio: EspacioDetalle; e
 }
 
 /** Placeholder photo in the wireframe style: a desk with a monitor, or a meeting table, and maybe a window. */
-function Foto({ sala, ventana, etiqueta, grande = false }: { sala: boolean; ventana: boolean; etiqueta?: string; grande?: boolean }) {
+function Foto({ sala, ventana, grande = false }: { sala: boolean; ventana: boolean; grande?: boolean }) {
   return (
     <div className={`relative overflow-hidden rounded-md border border-slate-200 bg-accent-50 ${grande ? 'h-[270px]' : 'h-[92px]'}`}>
       <svg viewBox="0 0 420 270" preserveAspectRatio="xMidYMid slice" className="absolute inset-0 h-full w-full" aria-hidden="true">
@@ -130,7 +130,6 @@ function Foto({ sala, ventana, etiqueta, grande = false }: { sala: boolean; vent
           </g>
         )}
       </svg>
-      {etiqueta && <span className="cover-tag">[{etiqueta}]</span>}
     </div>
   );
 }

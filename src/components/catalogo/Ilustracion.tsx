@@ -20,7 +20,7 @@ export function Ilustracion({ tono, variante = 0, etiqueta }: { tono: string; va
     });
 
   return (
-    <div className="cover" style={{ background: p.fondo }}>
+    <div className="cover" style={{ background: p.fondo }} role="img" aria-label={etiqueta}>
       <svg viewBox="0 0 440 152" preserveAspectRatio="xMidYMax slice" className="absolute inset-0 h-full w-full" aria-hidden="true">
         <rect x="44" y="36" width="104" height="92" fill={p.fuerte} />
         {ventanas(56, 48, 4, 4, 1)}
@@ -30,7 +30,6 @@ export function Ilustracion({ tono, variante = 0, etiqueta }: { tono: string; va
         <rect x="364" y="82" width="48" height="46" fill={p.suave} />
         <rect x="0" y="128" width="440" height="24" fill={p.suelo} />
       </svg>
-      <span className="cover-tag">[{etiqueta}]</span>
     </div>
   );
 }

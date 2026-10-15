@@ -110,7 +110,7 @@ export function MediosPagoCard({ mediosPago, onCambio, onMensaje }: MediosPagoCa
             <Icon name="card" />
           </div>
           <span className="t-sm font-semibold">Todavía no cargaste ninguna tarjeta</span>
-          <span className="t-xs muted max-w-[300px]">No hace falta para reservar: se pide recién al confirmar una reserva paga.</span>
+          <span className="t-xs muted max-w-[300px]">La vas a necesitar para pagar tus reservas.</span>
           <Button variant="secondary" size="sm" onClick={() => abrir({ modo: 'crear' })}>
             <Icon name="plus" size={14} />
             Agregar método de pago
@@ -163,7 +163,7 @@ export function MediosPagoCard({ mediosPago, onCambio, onMensaje }: MediosPagoCa
             />
           ))}
           <AgregarMedioPagoRow
-            descripcion="Se guarda al completar el formulario."
+            descripcion="Crédito o débito"
             disabled={lleno}
             onClick={() => abrir({ modo: 'crear' })}
           />

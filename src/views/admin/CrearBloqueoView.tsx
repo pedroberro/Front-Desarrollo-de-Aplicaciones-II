@@ -107,7 +107,7 @@ export function CrearBloqueoView() {
       <div className="flex flex-col gap-2">
         <Breadcrumb items={[{ label: 'Bloqueos', to: '/admin/bloqueos' }, { label: 'Nuevo' }]} />
         <h1 className="t-3xl font-semibold">Crear bloqueo</h1>
-        <p className="t-sm muted">Un bloqueo ocupa el calendario igual que una reserva, pero no tiene usuario.</p>
+        <p className="t-sm muted">Saca un espacio o un piso entero de circulación durante un horario.</p>
       </div>
 
       <div className="grid items-start gap-5 xl:grid-cols-[560px_1fr]">
@@ -198,7 +198,7 @@ export function CrearBloqueoView() {
             <div className="field">
               <label className="label" htmlFor="blq-detalle">Detalle</label>
               <textarea id="blq-detalle" className="textarea" maxLength={200} value={detalle} onChange={(e) => setDetalle(e.target.value)} placeholder="Demo Day · armado de sala y ensayo" />
-              <span className="hint">Se muestra en la agenda del admin. El cliente solo ve «Bloqueado».</span>
+              <span className="hint">Se ve en la agenda. En el plano el cliente solo ve «Bloqueado»; si el bloqueo cancela reservas, va en el mail de aviso.</span>
             </div>
 
             {error && (
@@ -260,15 +260,14 @@ export function CrearBloqueoView() {
             ) : (
               <p className="t-sm muted p-4">
                 {alcance === 'PISO'
-                  ? `Se crea un bloqueo en cada uno de los ${espacios.datos?.length ?? '…'} espacios del piso. Si alguno ya tiene reservas en ese horario, no se crea ninguno y se indica cuáles hay que mover.`
+                  ? `Se crea un bloqueo en cada uno de los ${espacios.datos?.length ?? '…'} espacios del piso. Si hay reservas en ese horario, te las mostramos antes de cancelarlas.`
                   : 'Elegí un espacio para ver su día.'}
               </p>
             )}
             <p className="t-xs muted mx-4 mb-4 flex gap-2">
               <Icon name="info" size={14} className="mt-0.5 flex-none text-amber-600" />
               El bloqueo ocupa la franja igual que una reserva: nadie puede reservar{' '}
-              {alcance === 'PISO' ? 'en el piso' : espacio?.codigo} entre las {horaDesde} y las {horaHasta}. Se distingue por la trama rayada y el candado, no solo
-              por el color.
+              {alcance === 'PISO' ? 'en el piso' : espacio?.codigo} entre las {horaDesde} y las {horaHasta}.
             </p>
           </div>
 

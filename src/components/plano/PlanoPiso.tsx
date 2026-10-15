@@ -181,7 +181,6 @@ export function Referencias({ areas = [] }: { areas?: AreaEnPlano[] }) {
     <div className="card">
       <div className="card-hd">
         <h2 className="t-sm font-semibold">Referencias</h2>
-        <span className="t-xs muted2">siempre visible</span>
       </div>
       <ul className="card-bd flex flex-col gap-3.5">
         {items.map((i) => (
@@ -196,10 +195,6 @@ export function Referencias({ areas = [] }: { areas?: AreaEnPlano[] }) {
           </li>
         ))}
       </ul>
-      <p className="t-xs muted mx-4 mb-4 flex gap-2 rounded-md border border-slate-200 bg-slate-50 p-2.5">
-        <Icon name="info" size={14} className="mt-0.5" />
-        Cada estado se distingue por color, trama y símbolo, para que se lea sin depender del color.
-      </p>
     </div>
   );
 }

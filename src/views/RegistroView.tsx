@@ -182,7 +182,7 @@ export function RegistroView() {
               onNumeroChange={cambiar('telefono', setTelefono)}
               onBlur={tocar('telefono')}
               error={mostrar('telefono') as string | null}
-              hint="Lo usamos si hay que avisarte de un bloqueo sobre tu reserva."
+              hint="Por si necesitamos contactarte por una reserva."
             />
 
             <PasswordInput
@@ -227,7 +227,7 @@ export function RegistroView() {
                 <AgregarMedioPagoRow
                   icono="card"
                   trailing="plus"
-                  descripcion="Podés dejarlo para después: se pide recién al confirmar una reserva paga."
+                  descripcion="Podés dejarlo para después: se pide al confirmar tu primera reserva."
                   onClick={() => setModalAbierto(true)}
                 />
               )}

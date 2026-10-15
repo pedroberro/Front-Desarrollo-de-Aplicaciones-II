@@ -120,8 +120,8 @@ export function ModalConfirmacion({ espacio, edificio, piso, franja, condiciones
       <p className="alert alert-info">
         <Icon name="info" size={14} className="mt-[3px]" />
         <span>
-          La reserva se crea como <b className="text-amber-700">Pendiente</b>, se cobra con la tarjeta elegida y queda confirmada en cuanto se acredita el pago. Si el pago se rechaza, se cancela y el horario se libera. Podés cancelarla
-          desde <b>Mis reservas</b> hasta las {horaDe(franja.inicio)} de ese día.
+          Se cobra con la tarjeta elegida y queda confirmada en cuanto se acredita el pago. Si el pago se rechaza, la reserva se cancela. Podés
+          cancelarla desde <b>Mis reservas</b> hasta las {horaDe(franja.inicio)} de ese día.
         </span>
       </p>
       <div className="rounded-md border border-slate-200 p-3">

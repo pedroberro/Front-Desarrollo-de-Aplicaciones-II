@@ -116,9 +116,9 @@ export function AgendaView() {
           <div className="t-xs muted flex flex-wrap justify-between gap-2 border-t border-slate-200 px-4 py-3">
             <span>
               {datos.espacios.length} espacios · {datos.bloques.filter((b) => b.tipo === 'RESERVA').length} reservas y{' '}
-              {datos.bloques.filter((b) => b.tipo === 'BLOQUEO').length} bloqueos · el resto se ve desplazando en horizontal
+              {datos.bloques.filter((b) => b.tipo === 'BLOQUEO').length} bloqueos
             </span>
-            <span>Clic en una reserva abre el formulario en modo edición; en un bloqueo, la opción de quitarlo</span>
+            <span>Hacé clic en una reserva para editarla o en un bloqueo para quitarlo</span>
           </div>
         )}
       </section>

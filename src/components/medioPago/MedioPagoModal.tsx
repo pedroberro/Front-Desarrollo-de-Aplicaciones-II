@@ -162,8 +162,8 @@ export function MedioPagoModal(props: MedioPagoModalProps) {
       <div className="alert alert-info">
         <Icon name="info" size={14} className="mt-[3px] text-slate-500" />
         <span className="t-xs">
-          No se procesa ningún pago: se guardan solo el titular, el vencimiento y los últimos cuatro dígitos, para
-          poder mostrarlos en el perfil.
+          Guardamos solo el titular, el vencimiento y los últimos cuatro dígitos. El número completo y el código de
+          seguridad no se guardan.
         </span>
       </div>
     </Modal>

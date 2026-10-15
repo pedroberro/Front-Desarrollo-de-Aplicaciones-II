@@ -22,8 +22,7 @@ export function ListaEspacios({ plano, onAbrir, modo }: ListaEspaciosProps) {
     <div className="card overflow-hidden">
       <div className="card-hd flex-wrap">
         <p className="t-xs muted">
-          <b className="t-sm text-slate-900">{espacios.length} espacios reservables</b> · los servicios del piso (baño, cocina, sala de estar) no aparecen
-          porque no se reservan
+          <b className="t-sm text-slate-900">{espacios.length} espacios reservables</b>
         </p>
         <span className="t-xs muted">Ordenado por código, {ascendente ? 'ascendente' : 'descendente'}</span>
       </div>

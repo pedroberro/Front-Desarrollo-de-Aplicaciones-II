@@ -232,7 +232,7 @@ export function ReservasAdminView() {
         )}
         {pagina && pagina.totalElements > 0 && (
           <div className="flex flex-wrap items-center justify-between gap-3 border-t border-slate-200 px-4 py-3">
-            <span className="t-xs muted">Filtrado, ordenado y paginado en el servidor · {TAMANIO} por página, ordenadas por hora de inicio</span>
+            <span className="t-xs muted">{TAMANIO} por página, ordenadas por hora de inicio</span>
             <span className="flex items-center gap-2">
               <button type="button" className="btn btn-secondary btn-sm btn-icon" disabled={pagina.page === 0} onClick={() => poner({ page: String(pagina.page - 1) })} aria-label="Página anterior">
                 <Icon name="chevLeft" size={14} />
@@ -315,7 +315,7 @@ export function ModalCancelarAdmin({ reserva, onCerrar, onListo }: { reserva: Re
     >
       <p className="t-sm muted">
         {reserva.cliente.nombre} · {reserva.espacio.codigo} · {diaMes(fechaDe(reserva.inicio))}, {rangoHorario(reserva.inicio, reserva.fin)}. La franja queda
-        libre y el cliente recibe un aviso por mail.
+        libre, se le devuelve el total y recibe un aviso por mail.
       </p>
       <div className="field">
         <label className="label" htmlFor="motivo-cancelar">

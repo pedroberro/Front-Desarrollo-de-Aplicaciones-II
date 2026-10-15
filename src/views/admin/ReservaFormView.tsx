@@ -352,8 +352,7 @@ export function ReservaFormView() {
             <div className="rounded-lg border border-dashed border-slate-300 p-4">
               <h3 className="t-sm font-semibold">Reserva a nombre de un cliente</h3>
               <p className="t-xs muted mt-1">
-                Para pedidos que llegan por teléfono o por mail. Queda <b>Pendiente</b> y el cliente recibe un aviso; se valida contra el mismo motor de
-                disponibilidad que usa el cliente.
+                Para pedidos que llegan por teléfono o por mail. Se cobra con la tarjeta principal del cliente, que recibe un aviso por mail.
               </p>
             </div>
           )}

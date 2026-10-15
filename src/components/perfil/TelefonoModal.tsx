@@ -72,7 +72,7 @@ export function TelefonoModal({ telefonoActual, onGuardado, onCerrar }: Telefono
         }}
         onBlur={() => setTocado(true)}
         error={errorServidor ?? (tocado ? error : null)}
-        hint="Lo usamos si hay que avisarte de un bloqueo sobre tu reserva."
+        hint="Por si necesitamos contactarte por una reserva."
       />
     </Modal>
   );
