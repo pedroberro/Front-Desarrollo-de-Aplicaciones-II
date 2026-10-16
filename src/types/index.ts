@@ -19,10 +19,21 @@ export interface ApiErrorBody {
   code?: string;
 }
 
+/** A signed-in session. The refresh token never reaches the page: it is an HttpOnly cookie. */
 export interface AuthResponse {
   token: string;
   usuario: Usuario;
 }
+
+/** First half of an administrator sign-in: the password was right, the second factor is missing. */
+export interface DesafioSegundoFactor {
+  segundoFactorRequerido: true;
+  desafio: string;
+  /** Only the first time: the secret to add to the authenticator app. */
+  altaSegundoFactor?: { secreto: string; uri: string };
+}
+
+export type RespuestaLogin = AuthResponse | DesafioSegundoFactor;
 
 export interface LoginRequest {
   email: string;

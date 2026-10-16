@@ -5,6 +5,8 @@ import { getApiCode, getApiErrorMessage, getApiStatus } from '../api/apiError';
 import { useAuth } from '../hooks/useAuth';
 import { AuthHeader } from '../components/auth/AuthHeader';
 import { PasswordInput } from '../components/auth/PasswordInput';
+import { SegundoFactorPaso } from '../components/auth/SegundoFactorPaso';
+import type { DesafioSegundoFactor } from '../types';
 import { Button } from '../components/ui/Button';
 import { Input } from '../components/ui/Input';
 import { Icon } from '../components/ui/Icon';
@@ -13,7 +15,7 @@ import { HOME_PATH, type LoginAviso } from '../routes';
 export function LoginView() {
   const navigate = useNavigate();
   const aviso = (useLocation().state as LoginAviso | null)?.aviso;
-  const { login } = useAuth();
+  const { login, completarSegundoFactor } = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
@@ -21,6 +23,8 @@ export function LoginView() {
   // Email of an account that exists but is not confirmed yet, to offer a new link.
   const [pendiente, setPendiente] = useState<string | null>(null);
   const [reenvio, setReenvio] = useState<'idle' | 'enviando' | 'enviado' | 'error'>('idle');
+  // Administrators: the password was right and the authenticator code is still missing.
+  const [desafio, setDesafio] = useState<DesafioSegundoFactor | null>(null);
 
   const handleSubmit = async (event: FormEvent) => {
     event.preventDefault();
@@ -33,7 +37,12 @@ export function LoginView() {
     }
     setEnviando(true);
     try {
-      await login({ email: email.trim(), password });
+      const pendienteSegundoFactor = await login({ email: email.trim(), password });
+      if (pendienteSegundoFactor) {
+        setDesafio(pendienteSegundoFactor);
+        setPassword('');
+        return;
+      }
       navigate(HOME_PATH, { replace: true });
     } catch (err) {
       if (getApiCode(err) === 'EMAIL_NO_CONFIRMADO') {
@@ -55,6 +64,16 @@ export function LoginView() {
       <div className="flex w-full max-w-[400px] flex-col items-center gap-8">
         <AuthHeader title="Planta Libre" subtitle="Reservá tu espacio de trabajo" />
 
+        {desafio ? (
+          <SegundoFactorPaso
+            desafio={desafio}
+            onConfirmar={async (codigo) => {
+              await completarSegundoFactor(desafio.desafio, codigo);
+              navigate(HOME_PATH, { replace: true });
+            }}
+            onVolver={() => setDesafio(null)}
+          />
+        ) : (
         <form onSubmit={handleSubmit} noValidate className="card w-full">
           <div className="card-bd flex flex-col gap-4 !p-6">
             {pendiente && (
@@ -141,6 +160,7 @@ export function LoginView() {
             </p>
           </div>
         </form>
+        )}
       </div>
     </div>
   );

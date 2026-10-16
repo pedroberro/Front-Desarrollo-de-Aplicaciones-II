@@ -1,12 +1,14 @@
 import { createContext, useState, useCallback, type ReactNode } from 'react';
-import type { AuthResponse, Usuario, LoginRequest, RegistroRequest } from '../types';
+import type { AuthResponse, DesafioSegundoFactor, Usuario, LoginRequest, RegistroRequest } from '../types';
 import { authApi } from '../api/authApi';
 
 export interface AuthContextType {
   usuario: Usuario | null;
   isAuthenticated: boolean;
   isLoading: boolean;
-  login: (data: LoginRequest) => Promise<void>;
+  /** Signs in, or returns the second-factor challenge when the account needs one (administrators). */
+  login: (data: LoginRequest) => Promise<DesafioSegundoFactor | null>;
+  completarSegundoFactor: (desafio: string, codigo: string) => Promise<void>;
   /** Stores a session obtained without the login form (e.g. confirming the email). */
   iniciarSesion: (respuesta: AuthResponse) => void;
   register: (data: RegistroRequest) => Promise<void>;
@@ -47,7 +49,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, [setUsuario]);
 
   const login = useCallback(async (data: LoginRequest) => {
-    iniciarSesion(await authApi.login(data));
+    const respuesta = await authApi.login(data);
+    if ('segundoFactorRequerido' in respuesta && respuesta.segundoFactorRequerido) return respuesta;
+    iniciarSesion(respuesta as AuthResponse);
+    return null;
+  }, [iniciarSesion]);
+
+  const completarSegundoFactor = useCallback(async (desafio: string, codigo: string) => {
+    iniciarSesion(await authApi.segundoFactor(desafio, codigo));
   }, [iniciarSesion]);
 
   const register = useCallback(async (data: RegistroRequest) => {
@@ -71,6 +80,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         isAuthenticated: !!usuario,
         isLoading: false,
         login,
+        completarSegundoFactor,
         iniciarSesion,
         register,
         logout,

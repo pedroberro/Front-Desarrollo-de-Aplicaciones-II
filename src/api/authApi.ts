@@ -1,9 +1,15 @@
 import apiClient from './axiosClient';
-import type { AuthResponse, ForgotPasswordRequest, LoginRequest, RegistroRequest, ResetPasswordRequest, Usuario } from '../types';
+import type { AuthResponse, ForgotPasswordRequest, LoginRequest, RegistroRequest, ResetPasswordRequest, RespuestaLogin, Usuario } from '../types';
 
 export const authApi = {
-  async login(data: LoginRequest): Promise<AuthResponse> {
-    const response = await apiClient.post<AuthResponse>('/auth/login', data);
+  async login(data: LoginRequest): Promise<RespuestaLogin> {
+    const response = await apiClient.post<RespuestaLogin>('/auth/login', data);
+    return response.data;
+  },
+
+  /** Second half of an administrator sign-in: the 6-digit code of the authenticator app. */
+  async segundoFactor(desafio: string, codigo: string): Promise<AuthResponse> {
+    const response = await apiClient.post<AuthResponse>('/auth/login/segundo-factor', { desafio, codigo });
     return response.data;
   },
 
