@@ -133,7 +133,7 @@ export function PisoView() {
         />
       ) : (
         <div className="card flex gap-3 p-4" aria-busy="true" aria-label="Cargando filtros">
-          {[184, 116, 116, 196, 168].map((w) => <div key={w} className="sk h-[58px]" style={{ width: w }} />)}
+          {[184, 116, 116, 196, 168].map((w, i) => <div key={i} className="sk h-[58px]" style={{ width: w }} />)}
         </div>
       )}
 

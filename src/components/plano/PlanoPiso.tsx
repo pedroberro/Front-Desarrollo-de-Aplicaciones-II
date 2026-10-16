@@ -41,10 +41,10 @@ export function PlanoPiso({ plano, seleccionadoId, onSeleccionar, modo }: PlanoP
     <div className="plano-wrap">
       <div className="plano" role="group" aria-label={`Plano del ${piso.nombre.toLowerCase()}, ${piso.disposicion.toLowerCase()}`}>
         <div className="plano-grid" style={{ gridTemplateColumns: `repeat(${piso.columnas}, minmax(0, 1fr))`, gridTemplateRows: plantillaFilas(plano) }}>
-          {areas.map((a) => <Area key={a.id} area={a} piso={piso} />)}
+          {areas.map((a) => <Area key={`area-${a.id}`} area={a} piso={piso} />)}
           {espacios.map((e) => (
             <Espacio
-              key={e.id}
+              key={`espacio-${e.id}`}
               espacio={e}
               piso={piso}
               seleccionado={e.id === seleccionadoId}
@@ -54,7 +54,7 @@ export function PlanoPiso({ plano, seleccionadoId, onSeleccionar, modo }: PlanoP
               onClick={() => onSeleccionar(e)}
             />
           ))}
-          {servicios.map((s) => <Servicio key={s.id} servicio={s} />)}
+          {servicios.map((s) => <Servicio key={`servicio-${s.id}`} servicio={s} />)}
         </div>
       </div>
     </div>
