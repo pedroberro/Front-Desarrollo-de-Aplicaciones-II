@@ -1,0 +1,44 @@
+# Type check and production build, static analysis (oxlint) and the tests once they exist, on every
+# push, pull request and release tag.
+name: CI
+
+on:
+  push:
+    branches: ["**"]
+    tags: ["v*"]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: Lint, tests y build
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: "22"
+          cache: npm
+
+      - run: npm ci
+
+      - name: Análisis estático (oxlint)
+        run: npm run lint
+
+      - name: Pruebas
+        run: npm test --if-present
+
+      - name: Type check y build (tsc -b && vite build)
+        run: npm run build
+
+      - name: Imagen Docker
+        run: docker build -t planta-libre-front .

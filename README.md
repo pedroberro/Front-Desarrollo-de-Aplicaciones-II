@@ -1,32 +1,30 @@
-# React + TypeScript + Vite
+# Planta Libre — Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+Aplicación web de reserva de espacios de trabajo: React 19, TypeScript y Vite.
 
-Currently, two official plugins are available:
+## Levantar el sistema completo
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+El sistema entero (base, broker, API y esta aplicación) se levanta con un solo comando desde el
+repositorio del backend. Las instrucciones están en su
+[README](https://github.com/pedroberro/Back-Desarrollo-de-Aplicaciones-II#levantar-el-sistema-completo).
+Este repositorio tiene que estar clonado en la misma carpeta que el backend.
 
-## React Compiler
+## Desarrollo
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+Requiere Node 22 y la API corriendo en `http://localhost:8080` (Vite reenvía `/api` hacia ahí).
 
-## Expanding the Oxlint configuration
-
-If you are developing a production application, we recommend enabling type-aware lint rules by installing `oxlint-tsgolint` and editing `.oxlintrc.json`:
-
-```json
-{
-  "$schema": "./node_modules/oxlint/configuration_schema.json",
-  "plugins": ["react", "typescript", "oxc"],
-  "options": {
-    "typeAware": true
-  },
-  "rules": {
-    "react/rules-of-hooks": "error",
-    "react/only-export-components": ["warn", { "allowConstantExport": true }]
-  }
-}
+```bash
+npm ci
+npm run dev
 ```
 
-See the [Oxlint rules documentation](https://oxc.rs/docs/guide/usage/linter/rules) for the full list of rules and categories.
+La aplicación queda en http://localhost:5173.
+
+| Comando | Qué hace |
+| --- | --- |
+| `npm run lint` | Análisis estático con oxlint |
+| `npm run build` | Chequeo de tipos y build de producción en `dist/` |
+
+El pipeline de CI (`.github/workflows/ci.yml`) corre lint, build e imagen Docker en cada push y
+pull request. En producción la sirve Vercel (`vercel.json`); en Docker, nginx (`Dockerfile`,
+`nginx.conf`).
