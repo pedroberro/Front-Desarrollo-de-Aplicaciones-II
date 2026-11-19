@@ -1,5 +1,6 @@
 import apiClient from './axiosClient';
 import { params } from './catalogoApi';
+import { conIdempotencia, ifMatch, recordarEtag } from './concurrencia';
 import type {
   AdminReservaRequest,
   AgendaPiso,
@@ -18,7 +19,9 @@ export const reservasApi = {
    * charges that card in the background and leaves it CONFIRMADA, or CANCELADA if the payment is declined.
    */
   async crear(espacioId: number, inicio: string, fin: string, medioPagoId: number): Promise<Reserva> {
-    return (await apiClient.post<Reserva>('/reservas', { espacioId, inicio, fin, medioPagoId })).data;
+    const cuerpo = { espacioId, inicio, fin, medioPagoId };
+    return conIdempotencia(['reserva', cuerpo], async (clave) =>
+      (await apiClient.post<Reserva>('/reservas', cuerpo, { headers: { 'Idempotency-Key': clave } })).data);
   },
 
   async mias(): Promise<MisReservas> {
@@ -26,7 +29,9 @@ export const reservasApi = {
   },
 
   async detalle(id: number): Promise<Reserva> {
-    return (await apiClient.get<Reserva>(`/reservas/${id}`)).data;
+    const response = await apiClient.get<Reserva>(`/reservas/${id}`);
+    recordarEtag(`reserva-${id}`, response.headers);
+    return response.data;
   },
 
   async cancelar(id: number): Promise<Reserva> {
@@ -44,11 +49,15 @@ export const adminApi = {
   },
 
   async crearReserva(data: AdminReservaRequest): Promise<Reserva> {
-    return (await apiClient.post<Reserva>('/admin/reservas', data)).data;
+    return conIdempotencia(['admin-reserva', data], async (clave) =>
+      (await apiClient.post<Reserva>('/admin/reservas', data, { headers: { 'Idempotency-Key': clave } })).data);
   },
 
+  /** With the ETag of the last read of this booking, if any: a change made by someone else in between answers 412. */
   async actualizarReserva(id: number, data: AdminReservaRequest): Promise<Reserva> {
-    return (await apiClient.put<Reserva>(`/admin/reservas/${id}`, data)).data;
+    const response = await apiClient.put<Reserva>(`/admin/reservas/${id}`, data, { headers: ifMatch(`reserva-${id}`) });
+    recordarEtag(`reserva-${id}`, response.headers);
+    return response.data;
   },
 
   async eliminarReserva(id: number): Promise<void> {

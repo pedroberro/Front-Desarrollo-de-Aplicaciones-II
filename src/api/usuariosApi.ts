@@ -1,14 +1,18 @@
 import apiClient from './axiosClient';
+import { conIdempotencia, ifMatch, recordarEtag } from './concurrencia';
 import type { AuthResponse, ChangePasswordRequest, MedioPagoRequest, MedioPagoResumen, MedioPagoUpdateRequest, UpdateMeRequest, Usuario } from '../types';
 
 export const usuariosApi = {
   async obtenerPerfil(): Promise<Usuario> {
     const response = await apiClient.get<Usuario>('/usuarios/me');
+    recordarEtag('perfil', response.headers);
     return response.data;
   },
 
+  /** With the ETag of the profile as last read: a change made in another tab in between answers 412. */
   async actualizarPerfil(data: UpdateMeRequest): Promise<Usuario> {
-    const response = await apiClient.patch<Usuario>('/usuarios/me', data);
+    const response = await apiClient.patch<Usuario>('/usuarios/me', data, { headers: ifMatch('perfil') });
+    recordarEtag('perfil', response.headers);
     return response.data;
   },
 
@@ -24,8 +28,8 @@ export const usuariosApi = {
   },
 
   async agregarMedioPago(data: MedioPagoRequest): Promise<MedioPagoResumen> {
-    const response = await apiClient.post<MedioPagoResumen>('/usuarios/me/medios-pago', data);
-    return response.data;
+    return conIdempotencia(['medio-pago', data], async (clave) =>
+      (await apiClient.post<MedioPagoResumen>('/usuarios/me/medios-pago', data, { headers: { 'Idempotency-Key': clave } })).data);
   },
 
   async actualizarMedioPago(id: number, data: MedioPagoUpdateRequest): Promise<MedioPagoResumen> {
