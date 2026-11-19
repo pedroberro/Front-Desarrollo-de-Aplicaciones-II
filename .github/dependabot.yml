@@ -1,0 +1,25 @@
+# Weekly update PRs for the npm dependencies, the GitHub Actions of the workflows and the
+# base images of the Dockerfile. Minor and patch versions come grouped in one PR per ecosystem;
+# majors come one by one, since they may need code changes.
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly
+    groups:
+      menores:
+        update-types: [minor, patch]
+
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+    groups:
+      acciones:
+        patterns: ["*"]
+
+  - package-ecosystem: docker
+    directory: /
+    schedule:
+      interval: weekly

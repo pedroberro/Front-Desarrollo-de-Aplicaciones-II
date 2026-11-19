@@ -1,4 +1,4 @@
-# Type check and production build, static analysis (oxlint) and the tests once they exist, on every
+# Type check and production build, static analysis (oxlint), dependency scan and UI tests, on every
 # push, pull request and release tag.
 name: CI
 
@@ -34,8 +34,13 @@ jobs:
       - name: Análisis estático (oxlint)
         run: npm run lint
 
-      - name: Pruebas
-        run: npm test --if-present
+      # Known vulnerabilities (OSV database) in every package of package-lock.json, direct or not.
+      # Fails the build when one is found.
+      - name: Escaneo de dependencias (OSV-Scanner)
+        run: docker run --rm -v "$PWD:/src:ro" ghcr.io/google/osv-scanner:v2.7.0 scan source -r /src
+
+      - name: Pruebas de UI (Vitest y Testing Library)
+        run: npm test
 
       - name: Type check y build (tsc -b && vite build)
         run: npm run build

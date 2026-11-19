@@ -23,8 +23,10 @@ La aplicación queda en http://localhost:5173.
 | Comando | Qué hace |
 | --- | --- |
 | `npm run lint` | Análisis estático con oxlint |
+| `npm test` | Pruebas de UI del flujo de reserva (Vitest y Testing Library) |
 | `npm run build` | Chequeo de tipos y build de producción en `dist/` |
 
-El pipeline de CI (`.github/workflows/ci.yml`) corre lint, build e imagen Docker en cada push y
-pull request. En producción la sirve Vercel (`vercel.json`); en Docker, nginx (`Dockerfile`,
+El pipeline de CI (`.github/workflows/ci.yml`) corre lint, escaneo de dependencias (OSV-Scanner),
+pruebas, build e imagen Docker en cada push y pull request. Dependabot abre cada semana los PR de
+actualización (`.github/dependabot.yml`). En producción la sirve Vercel (`vercel.json`); en Docker, nginx (`Dockerfile`,
 `nginx.conf`).
