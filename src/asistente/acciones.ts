@@ -2,7 +2,9 @@
 export type AccionAsistente =
   | 'GO_TO_RESERVATIONS'
   | 'GO_TO_MY_RESERVATIONS'
-  | 'GO_TO_AVAILABILITY';
+  | 'GO_TO_AVAILABILITY'
+  | 'GO_TO_PROFILE'
+  | 'GO_TO_RECOVERY';
 
 interface DestinoAsistente {
   etiqueta: string;
@@ -17,6 +19,8 @@ export const DESTINOS_ASISTENTE: Record<AccionAsistente, DestinoAsistente> = {
   GO_TO_RESERVATIONS: { etiqueta: 'Realizar reserva', ruta: '/empresas' },
   GO_TO_MY_RESERVATIONS: { etiqueta: 'Ver mis reservas', ruta: '/mis-reservas' },
   GO_TO_AVAILABILITY: { etiqueta: 'Buscar disponibilidad', ruta: '/empresas' },
+  GO_TO_PROFILE: { etiqueta: 'Ir a mi perfil', ruta: '/perfil' },
+  GO_TO_RECOVERY: { etiqueta: 'Recuperar contraseña', ruta: '/olvide-password' },
 };
 
 /** Resuelve solo acciones incluidas en el catálogo; valores desconocidos no navegan. */

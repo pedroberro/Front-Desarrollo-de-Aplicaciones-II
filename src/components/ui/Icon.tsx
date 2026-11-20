@@ -44,6 +44,17 @@ const paths = {
   drag: <path d="M12 3v18M8 7l4-4 4 4M8 17l4 4 4-4" />,
   window: <><rect x="3" y="4" width="18" height="16" rx="1.5" /><path d="M12 4v16" /></>,
   arrowLeft: <path d="M19 12H5M11 6l-6 6 6 6" />,
+  robot: (
+    <>
+      <rect x="4" y="7" width="16" height="12" rx="3" />
+      <path d="M12 3v4" />
+      <circle cx="12" cy="2.5" r="1.2" />
+      <path d="M9 12.5h.01M15 12.5h.01" />
+      <path d="M9.5 16h5" />
+      <path d="M3 11.5v3M21 11.5v3" />
+    </>
+  ),
+  send: <><path d="m22 2-7 20-4-9-9-4Z" /><path d="M22 2 11 13" /></>,
 } satisfies Record<string, ReactNode>;
 
 export type IconName = keyof typeof paths;
