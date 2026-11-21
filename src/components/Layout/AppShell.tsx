@@ -1,5 +1,4 @@
 import { Outlet, useLocation } from 'react-router-dom';
-import { ChatAsistente } from '../../asistente/ChatAsistente';
 import { Navbar } from './Navbar';
 import { ThemeToggle } from './ThemeToggle';
 
@@ -13,7 +12,6 @@ export function AppShell() {
       <main className="min-h-screen bg-slate-50">
         <ThemeToggle floating />
         <Outlet />
-        <ChatAsistente />
       </main>
     );
   }
@@ -24,7 +22,6 @@ export function AppShell() {
       <main className="page mx-auto w-full max-w-[1440px]">
         <Outlet />
       </main>
-      <ChatAsistente />
     </div>
   );
 }

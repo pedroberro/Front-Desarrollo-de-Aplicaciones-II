@@ -23,7 +23,7 @@ La aplicación queda en http://localhost:5173.
 | Comando | Qué hace |
 | --- | --- |
 | `npm run lint` | Análisis estático con oxlint |
-| `npm test` | Pruebas de UI (flujo de reserva y asistente de ayuda) con Vitest y Testing Library |
+| `npm test` | Pruebas de UI del flujo de reserva (Vitest y Testing Library) |
 | `npm run build` | Chequeo de tipos y build de producción en `dist/` |
 
 El pipeline de CI (`.github/workflows/ci.yml`) corre lint, escaneo de dependencias (OSV-Scanner),
