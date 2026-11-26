@@ -65,7 +65,7 @@ export function PisosView() {
             </div>
           </div>
         ) : (
-          <div className="sk h-[390px]" aria-busy="true" aria-label="Cargando edificio" />
+          <div className="sk h-[390px]" role="status" aria-busy="true" aria-label="Cargando edificio" />
         )}
 
         <section className="flex flex-col gap-3" aria-labelledby="titulo-pisos">

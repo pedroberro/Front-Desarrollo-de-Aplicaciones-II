@@ -75,7 +75,7 @@ export function BloqueosView() {
       )}
 
       <section className="card overflow-hidden">
-        {!grupos && <div className="sk m-4 h-[300px]" aria-busy="true" aria-label="Cargando bloqueos" />}
+        {!grupos && <div className="sk m-4 h-[300px]" role="status" aria-busy="true" aria-label="Cargando bloqueos" />}
         {grupos && grupos.length === 0 && hayFiltro && (
           <EmptyState icon="filter" titulo="Ningún bloqueo coincide con los filtros">
             Probá con otra empresa, edificio o piso.

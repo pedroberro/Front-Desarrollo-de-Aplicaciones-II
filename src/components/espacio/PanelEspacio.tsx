@@ -45,7 +45,7 @@ export function PanelEspacio({ espacio, piso, edificio, semana, onSemana, agenda
             modo="seleccionar"
           />
         ) : (
-          <div className="sk h-[520px]" aria-busy="true" aria-label="Cargando calendario" />
+          <div className="sk h-[520px]" role="status" aria-busy="true" aria-label="Cargando calendario" />
         )}
         <p className="t-xs muted mt-2 flex items-center gap-1.5">
           <Icon name="drag" size={14} />

@@ -1,0 +1,100 @@
+{
+  "generado": "2026-11-26T00:06:44.327Z",
+  "auditadas": [
+    {
+      "id": "login",
+      "nombre": "Ingreso",
+      "ruta": "/login",
+      "sesion": null,
+      "listo": "h1",
+      "axe": [],
+      "lighthouse": {
+        "performance": 99,
+        "accessibility": 100,
+        "best-practices": 100,
+        "seo": 83,
+        "intentos": [
+          99,
+          99,
+          99
+        ]
+      }
+    },
+    {
+      "id": "empresas",
+      "nombre": "Empresas",
+      "ruta": "/empresas",
+      "sesion": "demo",
+      "listo": "h1",
+      "axe": [],
+      "lighthouse": {
+        "performance": 100,
+        "accessibility": 100,
+        "best-practices": 100,
+        "seo": 82,
+        "intentos": [
+          100,
+          99,
+          100
+        ]
+      }
+    },
+    {
+      "id": "plano",
+      "nombre": "Plano de un piso",
+      "ruta": "/pisos/19?fecha=2026-12-16&desde=08:00&hasta=10:00&vista=plano&espacio=234",
+      "sesion": "demo",
+      "listo": ".plano",
+      "axe": [],
+      "lighthouse": {
+        "performance": 98,
+        "accessibility": 99,
+        "best-practices": 100,
+        "seo": 82,
+        "intentos": [
+          96,
+          99,
+          98
+        ]
+      }
+    },
+    {
+      "id": "mis-reservas",
+      "nombre": "Mis reservas",
+      "ruta": "/mis-reservas",
+      "sesion": "demo",
+      "listo": "h1",
+      "axe": [],
+      "lighthouse": {
+        "performance": 99,
+        "accessibility": 100,
+        "best-practices": 100,
+        "seo": 82,
+        "intentos": [
+          99,
+          98,
+          99
+        ]
+      }
+    },
+    {
+      "id": "agenda",
+      "nombre": "Agenda del día",
+      "ruta": "/admin/agenda?piso=19",
+      "sesion": "admin",
+      "listo": "h1",
+      "axe": [],
+      "lighthouse": {
+        "performance": 100,
+        "accessibility": 100,
+        "best-practices": 100,
+        "seo": 82,
+        "intentos": [
+          100,
+          100,
+          100
+        ]
+      }
+    }
+  ]
+}

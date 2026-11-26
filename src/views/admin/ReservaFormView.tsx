@@ -114,7 +114,7 @@ export function ReservaFormView() {
 
   if (original.estado.tipo === 'error') return <ErrorCarga mensaje={original.estado.mensaje} onReintentar={original.recargar} />;
   if (edificios.estado.tipo === 'error') return <ErrorCarga mensaje={edificios.estado.mensaje} onReintentar={edificios.recargar} />;
-  if (id && !r) return <div className="sk h-[560px]" aria-busy="true" aria-label="Cargando reserva" />;
+  if (id && !r) return <div className="sk h-[560px]" role="status" aria-busy="true" aria-label="Cargando reserva" />;
 
   return (
     <>

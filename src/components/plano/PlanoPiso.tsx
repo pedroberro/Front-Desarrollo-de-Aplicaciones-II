@@ -107,7 +107,6 @@ function Espacio({ espacio: e, piso, seleccionado, abrible, referencia, modo, on
         disabled={!abrible}
         onClick={onClick}
         aria-pressed={seleccionado}
-        aria-label={`${e.codigo}, ${e.tipoEtiqueta}, ${e.capacidad} ${e.capacidad === 1 ? 'persona' : 'personas'}, ${texto}`}
       >
         {e.ventana && <Icon name="window" size={14} className="tile-winic" />}
         {seleccionado ? <Icon name="check" size={16} className="absolute top-1.5 right-1.5 text-[color:var(--on-accent)]" /> : <i className="tile-glyph" aria-hidden="true" />}
@@ -151,7 +150,7 @@ function Espacio({ espacio: e, piso, seleccionado, abrible, referencia, modo, on
 
 function Servicio({ servicio: s }: { servicio: ServicioEnPlano }) {
   return (
-    <div className="tile tile-sala tile-servicio" style={area(s.posicion)} aria-label={`${s.nombre}, servicio del piso, no se reserva`}>
+    <div className="tile tile-sala tile-servicio" style={area(s.posicion)}>
       <Icon name={ICONO_SERVICIO[s.tipo] ?? 'info'} size={20} />
       <span className="tile-code">{s.nombre}</span>
       <span className="tile-sub">servicio del piso · no reservable</span>

@@ -99,7 +99,7 @@ export function AgendaView() {
 
       <section className="card overflow-hidden" aria-label="Agenda">
         {!datos ? (
-          <div className="sk m-4 h-[560px]" aria-busy="true" aria-label="Cargando agenda" />
+          <div className="sk m-4 h-[560px]" role="status" aria-busy="true" aria-label="Cargando agenda" />
         ) : (
           <GrillaAgenda
             espacios={datos.espacios}

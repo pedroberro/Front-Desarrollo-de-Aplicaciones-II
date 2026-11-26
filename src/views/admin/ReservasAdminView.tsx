@@ -163,7 +163,7 @@ export function ReservasAdminView() {
       </div>
 
       <section className="card overflow-hidden">
-        {!pagina && <div className="sk m-4 h-[480px]" aria-busy="true" aria-label="Cargando reservas" />}
+        {!pagina && <div className="sk m-4 h-[480px]" role="status" aria-busy="true" aria-label="Cargando reservas" />}
         {pagina && pagina.content.length === 0 && (
           <EmptyState icon="filter" titulo="Ninguna reserva coincide con los filtros">
             Probá ampliar el rango de fechas o quitar algún filtro.

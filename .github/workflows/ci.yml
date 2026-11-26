@@ -61,3 +61,77 @@ jobs:
 
       - name: Imagen Docker
         run: docker build -t planta-libre-front .
+
+  # The five manual scenarios of the booking flow, end to end against the real system: checks out
+  # the backend next to this repo, starts it with docker compose (database, broker, API and this
+  # front served by nginx) and drives a browser with Playwright. It also runs the axe-core audit
+  # and produces the accessibility evidence (Lighthouse and screenshots).
+  e2e:
+    name: End-to-end y accesibilidad (Playwright)
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    env:
+      E2E_BASE_URL: http://localhost:8088
+      E2E_API_URL: http://localhost:8080/api
+      E2E_BACK_DIR: ${{ github.workspace }}/backend
+    steps:
+      - uses: actions/checkout@v5
+
+      # The compose file of the backend expects the front cloned next to it: the path is inside the
+      # workspace and FRONT_CONTEXT points here. A token is only needed if the repo is private.
+      - uses: actions/checkout@v5
+        with:
+          repository: pedroberro/Back-Desarrollo-de-Aplicaciones-II
+          path: backend
+          token: ${{ secrets.BACK_REPO_TOKEN != '' && secrets.BACK_REPO_TOKEN || github.token }}
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: "22"
+          cache: npm
+
+      - run: npm ci
+
+      - name: Navegador de Playwright
+        run: npx playwright install --with-deps chromium
+
+      # The demo password is generated per run (never in the repository), like every other secret.
+      - name: Contraseña de las cuentas demo
+        run: |
+          valor=$(openssl rand -hex 32)
+          echo "::add-mask::$valor"
+          echo "DEMO_PASSWORD=$valor" >> "$GITHUB_ENV"
+          echo "E2E_DEMO_PASSWORD=$valor" >> "$GITHUB_ENV"
+
+      - name: Levantar el sistema (base, broker, API y front)
+        env:
+          FRONT_CONTEXT: ..
+          BUILDX_BAKE_ENTITLEMENTS_FS: "0"
+        run: |
+          docker compose -f backend/docker-compose.yml up -d --build
+          for i in $(seq 1 90); do curl -fsS http://localhost:8080/api/health && break; sleep 2; done
+          curl -fsS http://localhost:8080/api/health
+          for i in $(seq 1 60); do curl -fsS -o /dev/null http://localhost:8088 && break; sleep 2; done
+
+      - name: Escenarios end-to-end y auditoría de axe
+        run: npm run e2e
+
+      - name: Evidencia de accesibilidad (Lighthouse y capturas)
+        run: npm run a11y
+
+      - name: Reportes
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: e2e-y-accesibilidad
+          path: |
+            playwright-report/
+            test-results/
+            docs/Accesibilidad.md
+            docs/evidencia/accesibilidad/
+          if-no-files-found: ignore
+
+      - name: Registro del sistema
+        if: failure()
+        run: docker compose -f backend/docker-compose.yml logs --tail 200
+

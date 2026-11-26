@@ -171,14 +171,14 @@ export function CalendarioSemanal({
           onPointerMove={alMover}
           onPointerUp={alSoltar}
           onPointerCancel={() => setArrastre(null)}
-          role="grid"
+          role="group"
           aria-label="Calendario semanal del espacio"
         >
           {dias.map((dia, d) => {
             const pasado = dia < hoy ? cuerpo : dia === hoy ? Math.min(cuerpo, Math.max(0, ((minutos(horaDe(ahora)) - inicioDia) / PASO) * alto)) : 0;
             const delDia = ocupaciones.filter((o) => fechaDe(o.inicio) <= dia && fechaDe(o.fin) >= dia);
             return (
-              <div key={dia} className="cal-col" role="row">
+              <div key={dia} className="cal-col">
                 {Array.from({ length: slots }, (_, s) => (
                   <div
                     key={s}

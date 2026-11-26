@@ -139,7 +139,7 @@ export function AdminPlanoView() {
         />
       )}
 
-      {!datos && <div className="sk h-[620px]" aria-busy="true" aria-label="Cargando el plano" />}
+      {!datos && <div className="sk h-[620px]" role="status" aria-busy="true" aria-label="Cargando el plano" />}
 
       {datos && (
         <div className={`grid items-start gap-5 ${espacio ? 'xl:grid-cols-[minmax(0,1fr)_440px]' : 'xl:grid-cols-[minmax(0,1fr)_320px]'}`}>

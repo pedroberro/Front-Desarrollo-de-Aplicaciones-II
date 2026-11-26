@@ -132,7 +132,7 @@ export function PisoView() {
           resumen={<ContadorLibres libres={datos.resumen.libres} total={datos.resumen.total} />}
         />
       ) : (
-        <div className="card flex gap-3 p-4" aria-busy="true" aria-label="Cargando filtros">
+        <div className="card flex gap-3 p-4" role="status" aria-busy="true" aria-label="Cargando filtros">
           {[184, 116, 116, 196, 168].map((w, i) => <div key={i} className="sk h-[58px]" style={{ width: w }} />)}
         </div>
       )}
@@ -350,7 +350,7 @@ export function ComodidadesCard({ plano }: { plano: Plano }) {
 
 function PlanoCargando() {
   return (
-    <div className="grid gap-5 xl:grid-cols-[minmax(0,1fr)_320px]" aria-busy="true" aria-label="Cargando el plano">
+    <div className="grid gap-5 xl:grid-cols-[minmax(0,1fr)_320px]" role="status" aria-busy="true" aria-label="Cargando el plano">
       <div className="card grid grid-cols-7 gap-3 p-6">
         {Array.from({ length: 14 }, (_, i) => <div key={i} className="sk h-[76px]" />)}
         <div className="sk col-span-7 h-[40px]" />

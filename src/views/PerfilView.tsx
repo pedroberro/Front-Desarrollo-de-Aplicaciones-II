@@ -123,7 +123,7 @@ export function PerfilView() {
 
 function PerfilCargando() {
   return (
-    <div className="flex flex-col items-start gap-5 xl:flex-row" aria-busy="true" aria-label="Cargando perfil">
+    <div className="flex flex-col items-start gap-5 xl:flex-row" role="status" aria-busy="true" aria-label="Cargando perfil">
       <div className="card h-[380px] w-full animate-pulse bg-white xl:w-[600px]" />
       <div className="card h-[240px] w-full grow animate-pulse bg-white" />
     </div>

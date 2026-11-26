@@ -90,7 +90,7 @@ export function MisReservasView() {
         </div>
 
         {!datos && (
-          <div className="flex flex-col gap-3 p-4" aria-busy="true" aria-label="Cargando reservas">
+          <div className="flex flex-col gap-3 p-4" role="status" aria-busy="true" aria-label="Cargando reservas">
             {Array.from({ length: 4 }, (_, i) => <div key={i} className="sk h-[62px]" />)}
           </div>
         )}

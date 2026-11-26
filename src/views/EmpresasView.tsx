@@ -37,7 +37,7 @@ export function EmpresasView() {
       {estado.tipo === 'error' && <ErrorCarga mensaje={estado.mensaje} onReintentar={recargar} />}
 
       {estado.tipo === 'cargando' && (
-        <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3" aria-busy="true" aria-label="Cargando empresas">
+        <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3" role="status" aria-busy="true" aria-label="Cargando empresas">
           {Array.from({ length: 6 }, (_, i) => <div key={i} className="sk h-[316px]" />)}
         </div>
       )}

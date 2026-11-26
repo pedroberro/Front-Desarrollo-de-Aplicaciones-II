@@ -50,7 +50,7 @@ export function EdificiosView() {
       </div>
 
       {!detalle && (
-        <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3" aria-busy="true" aria-label="Cargando edificios">
+        <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3" role="status" aria-busy="true" aria-label="Cargando edificios">
           {Array.from({ length: 3 }, (_, i) => <div key={i} className="sk h-[304px]" />)}
         </div>
       )}

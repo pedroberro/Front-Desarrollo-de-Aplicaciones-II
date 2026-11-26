@@ -3,3 +3,8 @@ dist
 .git
 *.log
 .env*
+test-results
+playwright-report
+blob-report
+e2e/.auth
+backend
